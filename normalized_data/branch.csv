@@ -1,0 +1,105 @@
+branch_id,branch_name,short_name,degree_type
+1,Abu Dhabi Campus - Chemical Engineering,CHE,B.Tech
+2,Abu Dhabi Campus - Computer Science and Engineering,CSE,B.Tech
+3,Abu Dhabi Campus - Energy Engineering,ENE,B.Tech
+4,Aerospace Engineering,AE,B.Tech
+5,Agricultural and Food Engineering,AFE,B.Tech
+6,Applied Geology,AG,BS
+7,Applied Geophysics,AGP,BS
+8,Architecture,ARCH,B.Tech
+9,Artificial Intelligence,AI,B.Tech
+10,Artificial Intelligence and Data Analytics,AI,B.Tech
+11,Artificial Intelligence and Data Engineering,AI,B.Tech
+12,Artificial Intelligence and Data Science,AIDS,B.Tech
+13,B. Tech in CE. - M. Tech. in Geotechnical Engineering,BTI,B.Tech
+14,B. Tech in CE. - M. Tech. in Structural Engineering,BTI,B.Tech
+15,B. Tech.,BT,B.Tech
+16,B.Tech,B.T,B.Tech
+17,B.Tech Mining Engineering and MBA in Logistic and Supply Chain Management,MIN,B.Tech
+18,B.Tech in General Engineering,BIG,B.Tech
+19,B.Tech in Materials Science and Engineering,MSE,B.Tech
+20,B.Tech in Mathematics and Computing,MNC,B.Tech
+21,B.Tech in Microelectronics & VLSI,BIM,B.Tech
+22,B.Tech. in Electronics and Communication Engineering and M.Tech. in Communication Systems,ECE,B.Tech
+23,BS in Chemical Sciences,BIC,BS
+24,BS in Economics with MBA,BIE,BS
+25,BS in Mathematics,BIM,BS
+26,Bio Engineering,BE,B.Tech
+27,Biochemical Engineering,BE,B.Tech
+28,Bioengineering,BIO,B.Tech
+29,Biological Engineering,BE,B.Tech
+30,Biological Science,BS,BS
+31,Biological Sciences and Bioengineering,BSA,B.Tech
+32,Biomedical Engineering,BE,B.Tech
+33,Biosciences and Bioengineering,BAB,B.Tech
+34,Biotechnology and Biochemical Engineering,BT,B.Tech
+35,Biotechnology and Bioinformatics,BT,B.Tech
+36,Ceramic Engineering,CE,B.Tech
+37,Chemical Engineering,CHE,B.Tech
+38,Chemical Science,CS,BS
+39,Chemical Science and Technology,CSA,B.Tech
+40,Chemical Sciences,CS,BS
+41,Chemical and Biochemical Engineering,CAB,B.Tech
+42,Chemistry,CHE,BS
+43,Chemistry with Specialization,CWS,BS
+44,Civil Engineering,CE,B.Tech
+45,Civil and Infrastructure Engineering,CAI,B.Tech
+46,Computational Engineering,CE,B.Tech
+47,Computational Engineering and Mechanics,CEA,B.Tech
+48,Computer Science and Engineering,CSE,B.Tech
+49,Data Science and Artificial Intelligence,DSAI,B.Tech
+50,Data Science and Engineering,DS,B.Tech
+51,Design,DES,B.Tech
+52,Digital Agriculture,DA,B.Tech
+53,Earth Sciences,ES,BS
+54,Economics,ECO,BS
+55,Electrical Engineering,EE,B.Tech
+56,Electrical and Electronics Engineering,EAE,B.Tech
+57,Electronics Engineering,EE,B.Tech
+58,Electronics and Communication Engineering,ECE,B.Tech
+59,Electronics and Electrical Communication Engineering,EAE,B.Tech
+60,Electronics and Electrical Engineering,EE,B.Tech
+61,Energy Engineering,ENE,B.Tech
+62,Engineering Design,DES,Dual
+63,Engineering Physics,EP,B.Tech
+64,Engineering Science,ES,B.Tech
+65,Engineering and Computational Mechanics,EAC,B.Tech
+66,Environmental Engineering,ENV,B.Tech
+67,Environmental Science and Engineering,ESA,B.Tech
+68,Exploration Geophysics,EG,BS
+69,Geological Technology,GT,B.Tech
+70,Geophysical Technology,GT,B.Tech
+71,Industrial Chemistry,IC,B.Tech
+72,Industrial Engineering and Operations Research,IEA,B.Tech
+73,Industrial and Systems Engineering,ISE,B.Tech
+74,Instrumentation Engineering,IE,B.Tech
+75,Instrumentation and Biomedical Engineering,IAB,B.Tech
+76,Integrated Circuit Design & Technology,DES,B.Tech
+77,Interdisciplinary Sciences,IS,BS
+78,Manufacturing Science and Engineering,MSE,B.Tech
+79,Materials Engineering,ME,B.Tech
+80,Materials Science and Engineering,MSE,B.Tech
+81,Materials Science and Metallurgical Engineering,MSA,B.Tech
+82,Materials Science and Technology,MSA,B.Tech
+83,Mathematics & Computing,M&C,BS
+84,Mathematics and Computing,MNC,BS
+85,Mathematics and Scientific Computing,MAS,BS
+86,Mechanical Engineering,ME,B.Tech
+87,Mechatronics Engineering,ME,B.Tech
+88,Metallurgical Engineering,ME,B.Tech
+89,Metallurgical Engineering and Materials Science,MEA,B.Tech
+90,Metallurgical and Materials Engineering,MME,B.Tech
+91,Mineral and Metallurgical Engineering,MAM,B.Tech
+92,Mining Engineering,MIN,B.Tech
+93,Mining Machinery Engineering,MME,B.Tech
+94,Naval Architecture and Ocean Engineering,ARCH,B.Tech
+95,Ocean Engineering and Naval Architecture,OENA,B.Tech
+96,Petroleum Engineering,PE,B.Tech
+97,Pharmaceutical Engineering & Technology,PE&,B.Tech
+98,Physical Science,PS,BS
+99,Physics,PHY,BS
+100,Physics with Specialization,PWS,BS
+101,Production and Industrial Engineering,PAI,B.Tech
+102,Space Science and Engineering,SSA,B.Tech
+103,Statistics and Data Science,DS,BS
+104,Textile Technology,TT,B.Tech
