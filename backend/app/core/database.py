@@ -10,6 +10,7 @@ from typing import Generator
 from app.core.config import settings
 
 # Create SQLAlchemy engine
+# Enable echo=True temporarily for SQL query debugging if needed
 engine = create_engine(
     settings.DATABASE_URL,
     pool_pre_ping=True,

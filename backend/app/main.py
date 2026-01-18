@@ -3,9 +3,12 @@ FastAPI application entry point.
 Main application setup and route registration.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
+from sqlalchemy import text
 from app.core.config import settings
+from app.core.database import get_db
 from app.routes import recommend
 
 # Initialize FastAPI app
@@ -42,6 +45,25 @@ async def root():
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy"}
+
+
+@app.get("/health/db")
+async def health_check_db(db: Session = Depends(get_db)):
+    """Database health check endpoint."""
+    try:
+        # Test database connection
+        result = db.execute("SELECT 1").scalar()
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "result": result
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "database": "disconnected",
+            "error": str(e)
+        }
 
 
 if __name__ == "__main__":

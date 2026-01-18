@@ -29,7 +29,7 @@ class RankFilterService:
         rank: int,
         category: str,
         year: int,
-        round_number: int = 6
+        round_number: int = 5
     ) -> Tuple[List[RecommendationItem], List[RecommendationItem], List[RecommendationItem]]:
         """
         Get eligible recommendations and categorize them.
@@ -51,6 +51,7 @@ class RankFilterService:
         
         # Query eligible cutoffs
         # Using round_number for filtering (prefer latest round if available)
+        # Note: Using Cutoff.iit_id == IIT.id where id maps to iit_id column
         query = (
             db.query(Cutoff, IIT, Branch)
             .join(IIT, Cutoff.iit_id == IIT.id)

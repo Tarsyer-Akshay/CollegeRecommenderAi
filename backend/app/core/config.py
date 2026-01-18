@@ -3,8 +3,13 @@ Configuration management for the FastAPI backend.
 Loads environment variables from .env file.
 """
 
+import logging
 from pydantic_settings import BaseSettings
 from typing import Optional
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
@@ -28,4 +33,11 @@ class Settings(BaseSettings):
 
 
 # Global settings instance
-settings = Settings()
+try:
+    settings = Settings()
+    logger.info("Settings loaded successfully")
+    if not settings.DATABASE_URL:
+        logger.warning("DATABASE_URL is not set!")
+except Exception as e:
+    logger.error(f"Failed to load settings: {e}")
+    raise
