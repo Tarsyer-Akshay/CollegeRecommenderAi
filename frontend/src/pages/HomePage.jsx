@@ -6,13 +6,6 @@ import { ArrowRight, Target, Zap, Users, TrendingUp, Award, BookOpen } from 'luc
 const HomePage = () => {
   const features = [
     {
-      icon: Target,
-      title: 'JEE Main Predictor',
-      description: 'Get accurate college predictions based on your JEE Main rank',
-      link: '/jee-main',
-      color: 'from-blue-500 to-blue-600'
-    },
-    {
       icon: Zap,
       title: 'JEE Advanced Predictor',
       description: 'Discover IIT admission possibilities with your JEE Advanced rank',
@@ -54,21 +47,11 @@ const HomePage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <Link to="/jee-main">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-purple-600 to-purple-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2"
-                >
-                  <span>Start JEE Main Query</span>
-                  <ArrowRight className="w-5 h-5" />
-                </motion.button>
-              </Link>
               <Link to="/jee-advanced">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="border-2 border-purple-600 text-purple-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-purple-600 hover:text-white transition-all duration-300 flex items-center space-x-2"
+                  className="bg-gradient-to-r from-purple-600 to-purple-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2"
                 >
                   <span>JEE Advanced Query</span>
                   <ArrowRight className="w-5 h-5" />
