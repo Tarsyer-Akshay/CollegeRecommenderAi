@@ -1,0 +1,21 @@
+--- Verifying Full Report Generation ---
+
+1. Starting new session...
+SUCCESS: Session ID: b956bf53-fc0c-437f-bfbd-9ee1a2717182
+
+2. Requesting 'Show me the full report'...
+SUCCESS: Received response.
+Report Length: 4918
+Report Preview:
+# Personalized IIT JEE Advanced Counseling Report
+
+### 2. Student Profile Summary
+- **JEE Advanced Rank:** 3000
+- **Category:** OBC
+- **Counseling Year:** 2024
+
+---
+
+### 3. Overall Admission Outlook
+E...
+PASS: Full report generated successfully.

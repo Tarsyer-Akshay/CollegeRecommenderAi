@@ -29,20 +29,42 @@ class RecommendationItem(BaseModel):
         }
 
 
-class RecommendationResponse(BaseModel):
-    """Complete recommendation response with categorized results and LLM explanation."""
+class FilteredComparisonItem(BaseModel):
+    """Top recommendations for comparison table (Layer 2)."""
     
+    category: str  # "safe", "moderate", or "ambitious"
+    iit: str
+    branch: str
+    closing_rank: int
+    admission_probability: str  # "High", "Medium", or "Low"
+    location: Optional[str] = None
+
+
+class RecommendationResponse(BaseModel):
+    """Layered recommendation response with counselor summary, filtered comparison, and full report."""
+    
+    # Layer 1: Counselor Summary (brief, 10-15 seconds read)
+    counselor_summary: str = ""
+    
+    # Layer 2: Filtered Comparison (top 3-5 per category)
+    filtered_comparison: List[FilteredComparisonItem] = []
+    
+    # Layer 3: Full Counseling Report (detailed reasoning)
+    full_report: str = ""
+    
+    # Complete data (for full report page)
     safe: List[RecommendationItem]
     moderate: List[RecommendationItem]
     ambitious: List[RecommendationItem]
-    llm_response: str = ""
     
     class Config:
         json_schema_extra = {
             "example": {
+                "counselor_summary": "At your rank and category...",
+                "filtered_comparison": [],
+                "full_report": "Detailed counseling report...",
                 "safe": [],
                 "moderate": [],
-                "ambitious": [],
-                "llm_response": "Based on your rank..."
+                "ambitious": []
             }
         }

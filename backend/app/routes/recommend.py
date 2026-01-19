@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.core.database import get_db
 from app.schemas.request import RecommendationRequest
-from app.schemas.response import RecommendationResponse
+from app.schemas.response import RecommendationResponse, FilteredComparisonItem
 from app.services.rank_filter import RankFilterService
 from app.services.llm_service import LLMService
 
@@ -75,8 +75,8 @@ async def get_recommendations(
             round_number=5
         )
         
-        # Generate LLM response (if Gemini is configured)
-        llm_response = llm_service.generate_counseling_response(
+        # Generate Layer 1: Counselor Summary (brief)
+        counselor_summary = llm_service.generate_counselor_summary(
             rank=request.rank,
             category=request.category,
             query=request.query,
@@ -85,12 +85,81 @@ async def get_recommendations(
             ambitious=ambitious
         )
         
-        # Return structured response
+        # Generate appropriate response based on whether this is a follow-up query
+        if request.query and len(request.query.strip()) > 0:
+            # This is a follow-up question - generate contextual response
+            full_report = llm_service.generate_followup_response(
+                rank=request.rank,
+                category=request.category,
+                user_query=request.query,
+                safe=safe,
+                moderate=moderate,
+                ambitious=ambitious
+            )
+        else:
+            # This is initial recommendation - generate full report
+            full_report = llm_service.generate_full_report(
+                rank=request.rank,
+                category=request.category,
+                query=request.query,
+                safe=safe,
+                moderate=moderate,
+                ambitious=ambitious
+            )
+        
+        # Generate Layer 2: Filtered Comparison (top 3-5 per category)
+        def get_admission_probability(confidence: str) -> str:
+            """Map confidence to admission probability."""
+            if confidence == "safe":
+                return "High"
+            elif confidence == "moderate":
+                return "Medium"
+            else:
+                return "Low"
+        
+        filtered_comparison = []
+        
+        # Add top 5 safe options
+        for item in safe[:5]:
+            filtered_comparison.append(FilteredComparisonItem(
+                category="safe",
+                iit=item.iit,
+                branch=item.branch,
+                closing_rank=item.closing_rank,
+                admission_probability=get_admission_probability(item.confidence),
+                location=item.location
+            ))
+        
+        # Add top 3-5 moderate options
+        for item in moderate[:5]:
+            filtered_comparison.append(FilteredComparisonItem(
+                category="moderate",
+                iit=item.iit,
+                branch=item.branch,
+                closing_rank=item.closing_rank,
+                admission_probability=get_admission_probability(item.confidence),
+                location=item.location
+            ))
+        
+        # Add top 3-5 ambitious options
+        for item in ambitious[:5]:
+            filtered_comparison.append(FilteredComparisonItem(
+                category="ambitious",
+                iit=item.iit,
+                branch=item.branch,
+                closing_rank=item.closing_rank,
+                admission_probability=get_admission_probability(item.confidence),
+                location=item.location
+            ))
+        
+        # Return structured layered response
         return RecommendationResponse(
+            counselor_summary=counselor_summary,
+            filtered_comparison=filtered_comparison,
+            full_report=full_report,
             safe=safe,
             moderate=moderate,
-            ambitious=ambitious,
-            llm_response=llm_response
+            ambitious=ambitious
         )
     
     except HTTPException:

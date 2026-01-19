@@ -1,0 +1,19 @@
+Timestamp: 2026-01-18 23:20:56.085069
+Status Code: 200
+Full Report Length: 4832
+Full Report Content (first 200 chars):
+# Personalized IIT JEE Advanced Counseling Report
+
+### 2. Student Profile Summary
+- **JEE Advanced Rank:** 5000
+- **Category:** GEN
+- **Counseling Year:** 2024
+
+---
+
+### 3. Overall Admission Outlook
+E
+--------------------------------------------------
+Safe Options: 192
+Moderate Options: 30
+Ambitious Options: 28

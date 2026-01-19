@@ -1,0 +1,13 @@
+--- Verifying Session-Based Chat ---
+
+1. Starting new session...
+SUCCESS: Session started. ID: b7d5aff7-67dd-4a29-8a9d-1426b3350c04
+Initial Safe Options: 208
+Counselor Summary: At your rank and category, you have 208 strong SAFE options, 39 realistic MODERATE choices, and 12 A...
+
+2. Sending follow-up: 'Which of the safe options is best for CS?'
+SUCCESS: Received response.
+Counselor Response: Regarding your safe options, Indian Institute of Technology Bhubaneswar, Indian Institute of Technology Tirupati, Indian Institute of Technology Madras are strong choices based on previous years' cuto...
+
+Verifying context (Checking if response mentions known safe IITs)...
+PASS: Response references specific recommended colleges.
