@@ -54,7 +54,7 @@ const JeeAdvancedQuery = () => {
     try {
       // 1. Initial Session Creation (Start Counseling)
       if (!isInitialized) {
-        const response = await fetch("http://127.0.0.1:8000/api/chat/start", {
+        const response = await fetch("http://backend:8000/api/chat/start", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -111,7 +111,7 @@ const JeeAdvancedQuery = () => {
           throw new Error("Session ID missing");
         }
 
-        const response = await fetch(`http://127.0.0.1:8000/api/chat/${window.currentSessionId}/message`, {
+        const response = await fetch(`http://backend:8000/api/chat/${window.currentSessionId}/message`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: userQuery })
@@ -381,7 +381,7 @@ const JeeAdvancedQuery = () => {
                     addMessage("Generating your detailed professional report. This may take a moment...", "bot");
 
                     try {
-                      const response = await fetch(`http://127.0.0.1:8000/api/chat/${sessionId}/full-report`, {
+                      const response = await fetch(`http://backend:8000/api/chat/${sessionId}/full-report`, {
                         method: "POST",
                       });
 
