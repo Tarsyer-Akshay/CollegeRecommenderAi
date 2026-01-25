@@ -4,11 +4,17 @@ services:
   backend:
     image: backend-fast
     container_name: backend
+    env_file:
+      - ./backend/.env
     ports:
       - "8000:8000"
 
   frontend:
     image: frontend-clg
     container_name: frontend
+    env_file:
+      - ./frontend/.env
     ports:
       - 9000:80
+    depends_on:
+      - backend
