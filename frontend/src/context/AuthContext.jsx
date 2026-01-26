@@ -32,11 +32,11 @@ export const AuthProvider = ({ children }) => {
         return await supabase.auth.signUp({
             email,
             password,
-            phone, // Pass phone as a top-level property for Supabase Phone Auth
+            phone,
             options: {
                 data: {
                     full_name,
-                    phone, // Also store in metadata as a fallback/profile field
+                    phone,
                 },
             },
         });

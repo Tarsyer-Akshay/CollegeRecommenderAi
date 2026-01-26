@@ -5,7 +5,7 @@ Loads environment variables from .env file.
 
 import logging
 from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import Optional, List
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -20,6 +20,14 @@ class Settings(BaseSettings):
     
     # Gemini API Configuration
     GEMINI_API_KEY: Optional[str] = None
+    
+    # Auth Configuration
+    SUPABASE_JWT_SECRET: Optional[str] = None
+    SUPABASE_URL: Optional[str] = None
+    SUPABASE_KEY: Optional[str] = None
+    
+    # CORS Configuration
+    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
     
     # Application Configuration
     PROJECT_NAME: str = "IIT Rank-Based College Recommendation System"

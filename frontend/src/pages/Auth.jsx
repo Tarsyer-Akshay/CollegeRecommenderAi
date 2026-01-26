@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -30,7 +29,6 @@ const Auth = () => {
             } else {
                 const { error } = await signUp(email, password, fullName, phone);
                 if (error) throw error;
-                // Depending on Supabase settings, might need email confirmation
                 alert('Signup successful! Check your email for confirmation if required.');
                 setIsLogin(true);
             }

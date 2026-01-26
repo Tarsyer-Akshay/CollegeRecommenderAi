@@ -5,6 +5,7 @@ API routes for session-based counseling chat.
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.core.database import get_db
+from app.core.deps import get_current_user
 from app.schemas.session import SessionCreate, ChatResponse, ChatRequest, SessionState, ChatSession, Role
 from app.services.session_service import SessionService
 from app.services.rank_filter import RankFilterService
@@ -19,14 +20,17 @@ llm_service = LLMService()
 @router.post("/start", response_model=ChatSession)
 async def start_session(
     request: SessionCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Start a new counseling session.
     Generates initial recommendations and stores them in session state.
     """
-    # Create session
-    session = session_service.create_session(request)
+    user_id = current_user.get("sub")
+    
+    # Create session linked to user
+    session = session_service.create_session(db, request, user_id=user_id)
     
     # Generate initial recommendations
     try:
@@ -39,7 +43,7 @@ async def start_session(
         
         # Determine strict state transition
         # Default to summary shown initially
-        session_service.update_state(session.session_id, SessionState.SUMMARY_SHOWN)
+        session_service.update_state(db, session.session_id, SessionState.SUMMARY_SHOWN)
         
         # Generate initial summary using LLM
         summary = llm_service.generate_counselor_summary(
@@ -52,7 +56,7 @@ async def start_session(
         )
         
         # Add system/assistant welcome message to history
-        session_service.add_message(session.session_id, Role.ASSISTANT, summary)
+        session_service.add_message(db, session.session_id, Role.ASSISTANT, summary)
         
         # Store recommendations in session for context
         from app.schemas.response import RecommendationResponse, FilteredComparisonItem
@@ -76,9 +80,11 @@ async def start_session(
             ambitious=ambitious
         )
         
-        session_service.set_recommendations(session.session_id, full_response)
+        session_service.set_recommendations(db, session.session_id, full_response)
         
-        return session
+        # Refresh session to include updates
+        updated_session = session_service.get_session(db, session.session_id)
+        return updated_session
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to start session: {str(e)}")
@@ -87,25 +93,32 @@ async def start_session(
 async def send_message(
     session_id: str,
     request: ChatRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Send a message to the counselor.
     Returns the AI response and current session state.
     """
-    session = session_service.get_session(session_id)
+    session = session_service.get_session(db, session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
         
+    # Verify ownership
+    from app.models.session import Session as SessionModel
+    db_sess = db.query(SessionModel).filter(SessionModel.session_id == session_id).first()
+    if str(db_sess.user_id) != current_user.get("sub"):
+        raise HTTPException(status_code=403, detail="Not authorized")
+
     # 1. Add user message to history
-    session_service.add_message(session_id, Role.USER, request.message)
+    session_service.add_message(db, session_id, Role.USER, request.message)
     
     # 2. Generate response based on state and context
     response_text = ""
     
     # If user explicitly asks for full report, upgrade state
     if "full report" in request.message.lower() and session.state != SessionState.REPORT_SHOWN:
-        session_service.update_state(session_id, SessionState.REPORT_SHOWN)
+        session_service.update_state(db, session_id, SessionState.REPORT_SHOWN)
         
         # Generate full report if not present
         if not session.recommendations.full_report:
@@ -118,9 +131,10 @@ async def send_message(
                 ambitious=session.recommendations.ambitious
             )
             session.recommendations.full_report = report
+            session_service.set_recommendations(db, session_id, session.recommendations)
             
         response_text = "I've prepared your full counseling report. You can view it now. Do you have any specific questions about it?"
-        session_service.add_message(session_id, Role.ASSISTANT, response_text)
+        session_service.add_message(db, session_id, Role.ASSISTANT, response_text)
         
         return ChatResponse(
             session_id=session_id,
@@ -130,7 +144,7 @@ async def send_message(
         )
         
     # Standard Chat Flow (Follow-up)
-    history_str = session_service.get_formatted_history(session_id)
+    history_str = session_service.get_formatted_history(db, session_id)
     
     response_text = llm_service.generate_chat_response(
         rank=session.rank,
@@ -140,7 +154,7 @@ async def send_message(
         recommendations=session.recommendations
     )
     
-    session_service.add_message(session_id, Role.ASSISTANT, response_text)
+    session_service.add_message(db, session_id, Role.ASSISTANT, response_text)
     
     return ChatResponse(
         session_id=session_id,
@@ -149,13 +163,23 @@ async def send_message(
     )
 
 @router.post("/{session_id}/full-report", response_model=ChatResponse)
-async def generate_full_report_endpoint(session_id: str):
+async def generate_full_report_endpoint(
+    session_id: str,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
     """
     Generate the full counseling report on demand.
     """
-    session = session_service.get_session(session_id)
+    session = session_service.get_session(db, session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+    
+    # Verify ownership
+    from app.models.session import Session as SessionModel
+    db_sess = db.query(SessionModel).filter(SessionModel.session_id == session_id).first()
+    if str(db_sess.user_id) != current_user.get("sub"):
+        raise HTTPException(status_code=403, detail="Not authorized")
         
     # Check if already generated
     if session.recommendations.full_report:
@@ -179,7 +203,8 @@ async def generate_full_report_endpoint(session_id: str):
         
         # Update session state and data
         session.recommendations.full_report = report
-        session_service.update_state(session_id, SessionState.REPORT_SHOWN)
+        session_service.set_recommendations(db, session_id, session.recommendations)
+        session_service.update_state(db, session_id, SessionState.REPORT_SHOWN)
         
         return ChatResponse(
             session_id=session_id,
@@ -191,9 +216,20 @@ async def generate_full_report_endpoint(session_id: str):
         raise HTTPException(status_code=500, detail=f"Failed to generate report: {str(e)}")
 
 @router.get("/{session_id}", response_model=ChatSession)
-async def get_session_details(session_id: str):
+async def get_session_details(
+    session_id: str,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
     """Get full session details."""
-    session = session_service.get_session(session_id)
+    session = session_service.get_session(db, session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
+        
+    # Verify ownership
+    from app.models.session import Session as SessionModel
+    db_sess = db.query(SessionModel).filter(SessionModel.session_id == session_id).first()
+    if str(db_sess.user_id) != current_user.get("sub"):
+        raise HTTPException(status_code=403, detail="Not authorized")
+        
     return session

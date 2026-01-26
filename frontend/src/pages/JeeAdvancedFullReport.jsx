@@ -47,7 +47,7 @@ const JeeAdvancedFullReport = () => {
             {confidence}
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <TrendingUp className="w-4 h-4 text-green-500" />
           <span className="text-gray-600 text-sm">Closing Rank: <strong>{college.closing_rank.toLocaleString()}</strong></span>
@@ -144,63 +144,140 @@ const JeeAdvancedFullReport = () => {
                 </div>
               </div>
               <div className="prose prose-lg max-w-none">
-                <div className="text-gray-700 leading-relaxed whitespace-pre-line text-base report-content space-y-4">
-                  {reportData.full_report.split('\n').map((line, index) => {
-                    // Handle main title
-                    if (line.includes('Personalized IIT JEE Advanced Counseling Report')) {
-                      return (
-                        <h1 key={index} className="text-3xl font-bold text-center text-gray-800 mb-8 pb-4 border-b-2 border-purple-300 bg-gradient-to-r from-purple-50 to-transparent px-4 py-2 rounded-lg">
-                          {line}
-                        </h1>
-                      );
-                    }
-                    // Handle numbered section headers (### 1. Section Name)
-                    else if (line.match(/^### \d+\./)) {
-                      const sectionTitle = line.replace(/^### \d+\.\s*/, '');
-                      const sectionNumber = line.match(/^### (\d+)\./)?.[1];
-                      return (
-                        <div key={index} className="mt-10 mb-4">
-                          <h3 className="text-xl font-bold text-gray-800 mb-2 flex items-center">
-                            <span className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
-                              {sectionNumber}
+                <div className="space-y-4">
+                  {(() => {
+                    const lines = reportData.full_report.split('\n');
+                    const elements = [];
+                    let i = 0;
+
+                    // Helper function to render text with bold support
+                    const renderTextWithBold = (text, keyPrefix) => {
+                      return text.split(/(\*\*.*?\*\*)/).map((part, idx) => {
+                        if (part.startsWith('**') && part.endsWith('**')) {
+                          return <strong key={`${keyPrefix}-${idx}`} className="text-gray-900 font-bold">{part.slice(2, -2)}</strong>;
+                        }
+                        return <span key={`${keyPrefix}-${idx}`}>{part}</span>;
+                      });
+                    };
+
+                    while (i < lines.length) {
+                      const line = lines[i].trim();
+
+                      // Skip empty lines
+                      if (!line) {
+                        i++;
+                        continue;
+                      }
+
+                      // Headers
+                      if (line.startsWith('#')) {
+                        const level = line.match(/^#+/)[0].length;
+                        const text = line.replace(/^#+\s*/, '');
+
+                        if (level === 1) {
+                          elements.push(
+                            <h1 key={`h1-${i}`} className="text-2xl font-bold text-center text-gray-900 mb-6 bg-purple-50 py-2 rounded-lg">
+                              {text}
+                            </h1>
+                          );
+                        } else if (level === 2) {
+                          elements.push(
+                            <h2 key={`h2-${i}`} className="text-xl font-bold text-gray-800 mt-8 mb-4 border-b pb-2 border-purple-200">
+                              {text}
+                            </h2>
+                          );
+                        } else if (level === 3) {
+                          elements.push(
+                            <h3 key={`h3-${i}`} className="text-xl font-bold text-gray-800 mt-6 mb-3 flex items-center">
+                              <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                              {text}
+                            </h3>
+                          );
+                        } else {
+                          elements.push(
+                            <h4 key={`h4-${i}`} className="text-lg font-semibold text-purple-700 mt-4 mb-2 ml-4">
+                              {text}
+                            </h4>
+                          );
+                        }
+                        i++;
+                        continue;
+                      }
+
+                      // Tables
+                      if (line.startsWith('|') || (line.includes('|') && lines[i + 1] && lines[i + 1].includes('---'))) {
+                        const tableRows = [];
+                        while (i < lines.length && (lines[i].trim().startsWith('|') || lines[i].trim().includes('|'))) {
+                          tableRows.push(lines[i].trim());
+                          i++;
+                        }
+
+                        if (tableRows.length >= 2) {
+                          // Filter out separator line (e.g., |---|---|)
+                          const headerRow = tableRows[0];
+                          const dataRows = tableRows.slice(2); // Skip header and separator
+
+                          const headers = headerRow.split('|').filter(cell => cell.trim()).map(cell => cell.trim());
+
+                          elements.push(
+                            <div key={`table-${i}`} className="overflow-x-auto my-6 rounded-lg shadow-sm border border-gray-200">
+                              <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-purple-50">
+                                  <tr>
+                                    {headers.map((header, idx) => (
+                                      <th key={idx} className="px-6 py-3 text-left text-xs font-medium text-purple-800 uppercase tracking-wider">
+                                        {renderTextWithBold(header, `th-${i}-${idx}`)}
+                                      </th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                  {dataRows.map((row, rowIndex) => {
+                                    const cells = row.split('|').filter(cell => cell.trim()).map(cell => cell.trim());
+                                    if (cells.length === 0) return null;
+                                    return (
+                                      <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                        {cells.map((cell, cellIndex) => (
+                                          <td key={cellIndex} className="px-6 py-4 whitespace-normal text-sm text-gray-700">
+                                            {renderTextWithBold(cell, `td-${i}-${rowIndex}-${cellIndex}`)}
+                                          </td>
+                                        ))}
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          );
+                          continue;
+                        }
+                      }
+
+                      // Lists
+                      if (line.startsWith('- ')) {
+                        const content = line.substring(2);
+                        elements.push(
+                          <div key={`list-${i}`} className="flex items-start ml-4 mb-2 text-gray-700">
+                            <span className="text-purple-500 mr-2 mt-1.5">•</span>
+                            <span>
+                              {renderTextWithBold(content, `list-${i}`)}
                             </span>
-                            {sectionTitle}
-                          </h3>
-                          <div className="w-full h-0.5 bg-gradient-to-r from-purple-300 to-transparent"></div>
-                        </div>
-                      );
-                    }
-                    // Handle subsection headers (#### SUBSECTION)
-                    else if (line.match(/^#### /)) {
-                      const subTitle = line.replace(/^#### /, '');
-                      return (
-                        <h4 key={index} className="text-lg font-semibold text-purple-700 mt-6 mb-3 pl-4 border-l-4 border-purple-300">
-                          {subTitle}
-                        </h4>
-                      );
-                    }
-                    // Handle bullet points
-                    else if (line.trim().startsWith('- ')) {
-                      return (
-                        <div key={index} className="flex items-start mb-2 ml-4">
-                          <span className="text-purple-500 mr-2 mt-1">•</span>
-                          <p className="leading-relaxed flex-1">{line.trim().substring(2)}</p>
-                        </div>
-                      );
-                    }
-                    // Handle regular content
-                    else if (line.trim()) {
-                      return (
-                        <p key={index} className="mb-4 leading-relaxed text-gray-700 pl-2">
-                          {line}
+                          </div>
+                        );
+                        i++;
+                        continue;
+                      }
+
+                      // Regular Paragraphs
+                      elements.push(
+                        <p key={`p-${i}`} className="text-gray-700 leading-relaxed mb-2">
+                          {renderTextWithBold(line, `p-${i}`)}
                         </p>
                       );
+                      i++;
                     }
-                    // Handle empty lines for spacing
-                    else {
-                      return <div key={index} className="h-3"></div>;
-                    }
-                  })}
+                    return elements;
+                  })()}
                 </div>
               </div>
             </div>

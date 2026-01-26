@@ -30,7 +30,13 @@ create policy "Users can insert their own profile."
 
 -- Users can update own profile.
 create policy "Users can update own profile."
-  on profiles for update
+  on profiles for updateDEBUG: Token Header: {'alg': 'ES256', 'kid': '987dd82a-99d8-4281-84b9-5a1517049998', 'typ': 'JWT'}
+DEBUG: Invalid Token: The specified alg value is not allowed
+INFO:     127.0.0.1:57909 - "POST /api/chat/start HTTP/1.1" 401 Unauthorized       
+DEBUG: Token Header: {'alg': 'ES256', 'kid': '987dd82a-99d8-4281-84b9-5a1517049998', 'typ': 'JWT'}
+DEBUG: Invalid Token: The specified alg value is not allowed
+INFO:     127.0.0.1:51293 - "POST /api/chat/start HTTP/1.1" 401 Unauthorized       
+
   using ( auth.uid() = id );
 
 -- 4. Create a Trigger to auto-create profile on signup

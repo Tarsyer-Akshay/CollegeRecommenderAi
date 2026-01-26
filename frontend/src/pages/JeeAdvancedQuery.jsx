@@ -1,20 +1,60 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+
 import { Send, Bot, User, BookOpen, TrendingUp, MessageCircle, Eye, List } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const JeeAdvancedQuery = () => {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState([]);
-  const [rank, setRank] = useState('');
-  const [year, setYear] = useState(2024);
-  const [selectedCategory, setSelectedCategory] = useState('GEN');
+  const { session } = useAuth(); // Get auth session
+
+  // Initialize state from sessionStorage if available
+  const [messages, setMessages] = useState(() => {
+    const saved = sessionStorage.getItem('chat_messages');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [rank, setRank] = useState(() => {
+    return sessionStorage.getItem('chat_rank') || '';
+  });
+
+  const [year, setYear] = useState(() => {
+    return parseInt(sessionStorage.getItem('chat_year')) || 2024;
+  });
+
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    return sessionStorage.getItem('chat_category') || 'GEN';
+  });
+
   const [chatInput, setChatInput] = useState('');
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [currentRecommendationData, setCurrentRecommendationData] = useState(null);
+
+  const [isInitialized, setIsInitialized] = useState(() => {
+    return sessionStorage.getItem('chat_initialized') === 'true';
+  });
+
+  const [currentRecommendationData, setCurrentRecommendationData] = useState(() => {
+    const saved = sessionStorage.getItem('chat_recommendation_data');
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const chatInputRef = useRef(null);
+
+  // Persist state changes
+  useEffect(() => {
+    sessionStorage.setItem('chat_messages', JSON.stringify(messages));
+    sessionStorage.setItem('chat_rank', rank);
+    sessionStorage.setItem('chat_year', year);
+    sessionStorage.setItem('chat_category', selectedCategory);
+    sessionStorage.setItem('chat_initialized', isInitialized);
+    if (currentRecommendationData) {
+      sessionStorage.setItem('chat_recommendation_data', JSON.stringify(currentRecommendationData));
+    }
+  }, [messages, rank, year, selectedCategory, isInitialized, currentRecommendationData]);
+
+  // ... (lines 19-54 omitted for brevity)
 
   const categories = [
     { label: 'General', value: 'GEN' },
@@ -52,11 +92,20 @@ const JeeAdvancedQuery = () => {
     setLoading(true);
 
     try {
+      const token = session?.access_token;
+      if (!token) {
+        addMessage("Authentication error. Please log in again.", 'bot');
+        return;
+      }
+
       // 1. Initial Session Creation (Start Counseling)
       if (!isInitialized) {
         const response = await fetch("http://127.0.0.1:8000/api/chat/start", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
           body: JSON.stringify({
             rank: rankNum,
             category: selectedCategory,
@@ -66,61 +115,74 @@ const JeeAdvancedQuery = () => {
         });
 
         if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const session = await response.json();
+        const sessionData = await response.json(); // Rename local var to avoid conflict with Auth session
 
-        // Store session ID logic (using a ref or state would be better, adding to state here)
-        // For now, attaching to window to avoid complex refactor of everything
-        window.currentSessionId = session.session_id;
+        // Store session ID logic
+        const newSessionId = sessionData.session_id;
+        sessionStorage.setItem('chat_session_id', newSessionId);
+        window.currentSessionId = newSessionId; // Keep window ref for backward compat if needed, but rely on storage
 
-        const data = session.recommendations;
-        // Sort each category by closing_rank ascending
-        const sortByClosingRank = (a, b) => a.closing_rank - b.closing_rank;
-
-        const sortedData = {
-          counselor_summary: data.counselor_summary || '',
-          filtered_comparison: data.filtered_comparison || [],
-          full_report: data.full_report || '',
-          safe: (data.safe || []).sort(sortByClosingRank),
-          moderate: (data.moderate || []).sort(sortByClosingRank),
-          ambitious: (data.ambitious || []).sort(sortByClosingRank)
-        };
-
-        setCurrentRecommendationData(sortedData);
-
-        // Show structured messages
-        addMessage(sortedData.counselor_summary, 'bot', { type: 'summary' });
-
-        setTimeout(() => {
-          const top3Safe = sortedData.safe.slice(0, 3);
-          const top3Moderate = sortedData.moderate.slice(0, 3);
-          const top3Ambitious = sortedData.ambitious.slice(0, 3);
-
-          addMessage('', 'bot', {
-            type: 'top_recommendations',
-            safe: top3Safe,
-            moderate: top3Moderate,
-            ambitious: top3Ambitious
-          });
-        }, 1500);
+        const data = sessionData.recommendations;
+        setCurrentRecommendationData({
+          safe: data.safe || [],
+          moderate: data.moderate || [],
+          ambitious: data.ambitious || [],
+          full_report: null
+        });
 
         setIsInitialized(true);
-      }
-      // 2. Follow-up Chat Message
-      else {
-        if (!window.currentSessionId) {
-          throw new Error("Session ID missing");
+
+        // Display Initial Summary from Session History (last message)
+        if (sessionData.history && sessionData.history.length > 0) {
+          const lastMsg = sessionData.history[sessionData.history.length - 1];
+          if (lastMsg.role === 'assistant') {
+            addMessage(lastMsg.content, 'bot', { type: 'summary' });
+          }
         }
 
-        const response = await fetch(`http://127.0.0.1:8000/api/chat/${window.currentSessionId}/message`, {
+        // Display Recommendations Cards
+        setTimeout(() => {
+          addMessage('', 'bot', {
+            type: 'top_recommendations',
+            safe: data.safe || [],
+            moderate: data.moderate || [],
+            ambitious: data.ambitious || []
+          });
+        }, 500);
+
+        // If there was a specific query during start (unlikely in this UI flow but possible)
+        if (userQuery) {
+          const storedSessionId = sessionStorage.getItem('chat_session_id');
+          const chatResponseRaw = await fetch(`http://127.0.0.1:8000/api/chat/${storedSessionId}/message`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ message: userQuery })
+          });
+
+          if (!chatResponseRaw.ok) throw new Error(`API error: ${chatResponseRaw.status}`);
+          const chatResponse = await chatResponseRaw.json();
+          addMessage(chatResponse.message, 'bot');
+        }
+      } else {
+        // ... (Existing else block for when session is already initialized)
+        // This part handles subsequent messages
+        const storedSessionId = sessionStorage.getItem('chat_session_id');
+        const chatResponseRaw = await fetch(`http://127.0.0.1:8000/api/chat/${storedSessionId}/message`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
           body: JSON.stringify({ message: userQuery })
         });
 
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const chatResponse = await response.json();
+        if (!chatResponseRaw.ok) throw new Error(`API error: ${chatResponseRaw.status}`);
+        const chatResponse = await chatResponseRaw.json();
 
-        // Handle full report response
+        // ... check for full report and display response ...
         if (chatResponse.data && chatResponse.data.full_report) {
           // Update local data with full report
           setCurrentRecommendationData(prev => ({
@@ -140,7 +202,6 @@ const JeeAdvancedQuery = () => {
             });
           }, 1000);
         } else {
-          // Standard text response
           addMessage(chatResponse.message, 'bot');
         }
       }
@@ -304,7 +365,7 @@ const JeeAdvancedQuery = () => {
                       SAFE OPTIONS (High Admission Probability)
                     </h5>
                     <div className="text-sm text-gray-700 space-y-1">
-                      {safe.map((college, idx) => (
+                      {safe.slice(0, 3).map((college, idx) => (
                         <div key={idx} className="flex items-center">
                           <span className="text-gray-400 mr-2">•</span>
                           <span className="font-medium">{college.iit}</span>
@@ -324,7 +385,7 @@ const JeeAdvancedQuery = () => {
                       MODERATE OPTIONS (Medium Admission Probability)
                     </h5>
                     <div className="text-sm text-gray-700 space-y-1">
-                      {moderate.map((college, idx) => (
+                      {moderate.slice(0, 3).map((college, idx) => (
                         <div key={idx} className="flex items-center">
                           <span className="text-gray-400 mr-2">•</span>
                           <span className="font-medium">{college.iit}</span>
@@ -344,7 +405,7 @@ const JeeAdvancedQuery = () => {
                       AMBITIOUS OPTIONS (Low Admission Probability)
                     </h5>
                     <div className="text-sm text-gray-700 space-y-1">
-                      {ambitious.map((college, idx) => (
+                      {ambitious.slice(0, 3).map((college, idx) => (
                         <div key={idx} className="flex items-center">
                           <span className="text-gray-400 mr-2">•</span>
                           <span className="font-medium">{college.iit}</span>
@@ -362,7 +423,7 @@ const JeeAdvancedQuery = () => {
               <div className="mt-4 pt-3 border-t border-gray-100 flex space-x-2">
                 <motion.button
                   onClick={async () => {
-                    const sessionId = window.currentSessionId;
+                    const sessionId = sessionStorage.getItem('chat_session_id');
 
                     // If we already have the full report, go directly
                     if (currentRecommendationData.full_report) {
@@ -383,6 +444,9 @@ const JeeAdvancedQuery = () => {
                     try {
                       const response = await fetch(`http://127.0.0.1:8000/api/chat/${sessionId}/full-report`, {
                         method: "POST",
+                        headers: {
+                          "Authorization": `Bearer ${session?.access_token}`
+                        }
                       });
 
                       if (!response.ok) throw new Error("Failed to generate report");
@@ -463,9 +527,45 @@ const JeeAdvancedQuery = () => {
                 <span>Complete Counseling Report</span>
               </h3>
 
-              <div className="prose max-w-none mb-4">
-                <div className="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm mb-4">
-                  {report}
+              <div className="prose prose-purple max-w-none mb-4 text-sm text-gray-700 leading-relaxed">
+                <div className="space-y-4">
+                  {(() => {
+                    const lines = report.split('\n');
+                    const elements = [];
+                    let i = 0;
+
+                    // Helper to render text with bold
+                    const renderTextWithBold = (text, keyPrefix) => {
+                      return text.split(/(\*\*.*?\*\*)/).map((part, idx) => {
+                        if (part.startsWith('**') && part.endsWith('**')) {
+                          return <strong key={`${keyPrefix}-${idx}`} className="text-gray-900 font-bold">{part.slice(2, -2)}</strong>;
+                        }
+                        return <span key={`${keyPrefix}-${idx}`}>{part}</span>;
+                      });
+                    };
+
+                    while (i < lines.length) {
+                      const line = lines[i].trim();
+                      if (!line) { i++; continue; }
+
+                      if (line.startsWith('### ')) {
+                        elements.push(<h3 key={i} className="text-lg font-bold text-gray-800 mt-4 mb-2">{renderTextWithBold(line.substring(4), `h3-${i}`)}</h3>);
+                      } else if (line.startsWith('#### ')) {
+                        elements.push(<h4 key={i} className="text-md font-semibold text-purple-700 mt-3 mb-1">{renderTextWithBold(line.substring(5), `h4-${i}`)}</h4>);
+                      } else if (line.startsWith('- ')) {
+                        elements.push(
+                          <div key={i} className="flex items-start ml-2 mb-1 text-sm text-gray-700">
+                            <span className="text-purple-500 mr-2">•</span>
+                            <span>{renderTextWithBold(line.substring(2), `li-${i}`)}</span>
+                          </div>
+                        );
+                      } else {
+                        elements.push(<p key={i} className="text-sm text-gray-700 leading-relaxed mb-2">{renderTextWithBold(line, `p-${i}`)}</p>);
+                      }
+                      i++;
+                    }
+                    return elements;
+                  })()}
                 </div>
               </div>
 
@@ -611,8 +711,120 @@ const JeeAdvancedQuery = () => {
           <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
             <Bot className="w-5 h-5 text-white" />
           </div>
-          <div className="bg-white rounded-2xl rounded-tl-none px-5 py-4 shadow-sm border border-gray-200">
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{message.text}</p>
+          <div className="bg-white rounded-2xl rounded-tl-none px-5 py-4 shadow-sm border border-gray-200 w-full overflow-hidden">
+            <div className="space-y-4">
+              {(() => {
+                const lines = message.text.split('\n');
+                const elements = [];
+                let i = 0;
+
+                // Helper function to render text with bold support
+                const renderTextWithBold = (text, keyPrefix) => {
+                  return text.split(/(\*\*.*?\*\*)/).map((part, idx) => {
+                    if (part.startsWith('**') && part.endsWith('**')) {
+                      return <strong key={`${keyPrefix}-${idx}`} className="text-gray-900 font-bold">{part.slice(2, -2)}</strong>;
+                    }
+                    return <span key={`${keyPrefix}-${idx}`}>{part}</span>;
+                  });
+                };
+
+                while (i < lines.length) {
+                  const line = lines[i].trim();
+
+                  // Skip empty lines
+                  if (!line) {
+                    i++;
+                    continue;
+                  }
+
+                  // Headers
+                  if (line.startsWith('#')) {
+                    const level = line.match(/^#+/)[0].length;
+                    const text = line.replace(/^#+\s*/, '');
+
+                    if (level === 1) {
+                      elements.push(<h3 key={`h-${i}`} className="text-lg font-bold text-gray-900 mt-4 mb-2">{text}</h3>);
+                    } else if (level === 2) {
+                      elements.push(<h4 key={`h-${i}`} className="text-md font-bold text-gray-800 mt-3 mb-2">{text}</h4>);
+                    } else {
+                      elements.push(<h5 key={`h-${i}`} className="text-sm font-bold text-gray-800 mt-2 mb-1">{text}</h5>);
+                    }
+                    i++;
+                    continue;
+                  }
+
+                  // Tables
+                  if (line.startsWith('|') || (line.includes('|') && lines[i + 1] && lines[i + 1].includes('---'))) {
+                    const tableRows = [];
+                    while (i < lines.length && (lines[i].trim().startsWith('|') || lines[i].trim().includes('|'))) {
+                      tableRows.push(lines[i].trim());
+                      i++;
+                    }
+
+                    if (tableRows.length >= 2) {
+                      const headerRow = tableRows[0];
+                      const dataRows = tableRows.slice(2); // Skip header and separator
+
+                      const headers = headerRow.split('|').filter(cell => cell.trim()).map(cell => cell.trim());
+
+                      elements.push(
+                        <div key={`table-${i}`} className="overflow-x-auto my-3 rounded-lg border border-gray-200">
+                          <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                              <tr>
+                                {headers.map((header, idx) => (
+                                  <th key={idx} className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    {renderTextWithBold(header, `th-${i}-${idx}`)}
+                                  </th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                              {dataRows.map((row, rowIndex) => {
+                                const cells = row.split('|').filter(cell => cell.trim()).map(cell => cell.trim());
+                                if (cells.length === 0) return null;
+                                return (
+                                  <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                    {cells.map((cell, cellIndex) => (
+                                      <td key={cellIndex} className="px-3 py-2 whitespace-normal text-sm text-gray-700">
+                                        {renderTextWithBold(cell, `td-${i}-${rowIndex}-${cellIndex}`)}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      );
+                      continue;
+                    }
+                  }
+
+                  // Lists
+                  if (line.startsWith('- ')) {
+                    const content = line.substring(2);
+                    elements.push(
+                      <div key={`list-${i}`} className="flex items-start ml-2 mb-1 text-sm text-gray-700">
+                        <span className="text-purple-500 mr-2 mt-1">•</span>
+                        <span>{renderTextWithBold(content, `list-${i}`)}</span>
+                      </div>
+                    );
+                    i++;
+                    continue;
+                  }
+
+                  // Regular Paragraphs
+                  elements.push(
+                    <p key={`p-${i}`} className="text-gray-700 leading-relaxed text-sm mb-2">
+                      {renderTextWithBold(line, `p-${i}`)}
+                    </p>
+                  );
+                  i++;
+                }
+                return elements;
+              })()}
+            </div>
           </div>
         </div>
       </motion.div>

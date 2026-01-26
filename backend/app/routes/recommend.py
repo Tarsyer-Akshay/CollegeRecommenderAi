@@ -119,8 +119,8 @@ async def get_recommendations(
         
         filtered_comparison = []
         
-        # Add top 5 safe options
-        for item in safe[:5]:
+        # Add top 3 safe options
+        for item in safe[:3]:
             filtered_comparison.append(FilteredComparisonItem(
                 category="safe",
                 iit=item.iit,
@@ -130,8 +130,8 @@ async def get_recommendations(
                 location=item.location
             ))
         
-        # Add top 3-5 moderate options
-        for item in moderate[:5]:
+        # Add top 3 moderate options
+        for item in moderate[:3]:
             filtered_comparison.append(FilteredComparisonItem(
                 category="moderate",
                 iit=item.iit,
@@ -141,8 +141,8 @@ async def get_recommendations(
                 location=item.location
             ))
         
-        # Add top 3-5 ambitious options
-        for item in ambitious[:5]:
+        # Add top 3 ambitious options
+        for item in ambitious[:3]:
             filtered_comparison.append(FilteredComparisonItem(
                 category="ambitious",
                 iit=item.iit,
