@@ -41,6 +41,7 @@ const JeeAdvancedQuery = () => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const chatInputRef = useRef(null);
+  const API_URL = import.meta.env.API_URL
 
   // Persist state changes
   useEffect(() => {
@@ -100,7 +101,7 @@ const JeeAdvancedQuery = () => {
 
       // 1. Initial Session Creation (Start Counseling)
       if (!isInitialized) {
-        const response = await fetch("http://127.0.0.1:8000/api/chat/start", {
+        const response = await fetch(`${API_URL}/api/chat/start`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -153,7 +154,7 @@ const JeeAdvancedQuery = () => {
         // If there was a specific query during start (unlikely in this UI flow but possible)
         if (userQuery) {
           const storedSessionId = sessionStorage.getItem('chat_session_id');
-          const chatResponseRaw = await fetch(`http://127.0.0.1:8000/api/chat/${storedSessionId}/message`, {
+          const chatResponseRaw = await fetch(`${API_URL}/api/chat/${storedSessionId}/message`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -170,7 +171,7 @@ const JeeAdvancedQuery = () => {
         // ... (Existing else block for when session is already initialized)
         // This part handles subsequent messages
         const storedSessionId = sessionStorage.getItem('chat_session_id');
-        const chatResponseRaw = await fetch(`http://127.0.0.1:8000/api/chat/${storedSessionId}/message`, {
+        const chatResponseRaw = await fetch(`${API_URL}/api/chat/${storedSessionId}/message`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -442,7 +443,7 @@ const JeeAdvancedQuery = () => {
                     addMessage("Generating your detailed professional report. This may take a moment...", "bot");
 
                     try {
-                      const response = await fetch(`http://127.0.0.1:8000/api/chat/${sessionId}/full-report`, {
+                      const response = await fetch(`${API_URL}/api/chat/${sessionId}/full-report`, {
                         method: "POST",
                         headers: {
                           "Authorization": `Bearer ${session?.access_token}`
