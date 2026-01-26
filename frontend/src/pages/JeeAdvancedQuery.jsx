@@ -41,7 +41,9 @@ const JeeAdvancedQuery = () => {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const chatInputRef = useRef(null);
-  const API_URL = import.meta.env.API_URL
+  const API_URL = import.meta.env.VITE_API_URL
+
+  console.log(API_URL)
 
   // Persist state changes
   useEffect(() => {
