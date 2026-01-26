@@ -100,7 +100,7 @@ const JeeAdvancedQuery = () => {
 
       // 1. Initial Session Creation (Start Counseling)
       if (!isInitialized) {
-        const response = await fetch("http://192.168.33.10:8000/api/chat/start", {
+        const response = await fetch("http://127.0.0.1:8000/api/chat/start", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -140,7 +140,6 @@ const JeeAdvancedQuery = () => {
           }
         }
 
-<<<<<<< HEAD
         // Display Recommendations Cards
         setTimeout(() => {
           addMessage('', 'bot', {
@@ -172,9 +171,6 @@ const JeeAdvancedQuery = () => {
         // This part handles subsequent messages
         const storedSessionId = sessionStorage.getItem('chat_session_id');
         const chatResponseRaw = await fetch(`http://127.0.0.1:8000/api/chat/${storedSessionId}/message`, {
-=======
-        const response = await fetch(`http://192.168.33.10:8000/api/chat/${window.currentSessionId}/message`, {
->>>>>>> b2a56c9b89e2189e9643b9e37e83e4ab9e8fa648
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -446,7 +442,7 @@ const JeeAdvancedQuery = () => {
                     addMessage("Generating your detailed professional report. This may take a moment...", "bot");
 
                     try {
-                      const response = await fetch(`http://192.168.33.10:8000/api/chat/${sessionId}/full-report`, {
+                      const response = await fetch(`http://127.0.0.1:8000/api/chat/${sessionId}/full-report`, {
                         method: "POST",
                         headers: {
                           "Authorization": `Bearer ${session?.access_token}`
