@@ -43,6 +43,7 @@ const JeeAdvancedQuery = () => {
   const messagesEndRef = useRef(null);
   const chatInputRef = useRef(null);
 
+
   // Persist state changes
   useEffect(() => {
     sessionStorage.setItem('chat_messages', JSON.stringify(messages));
