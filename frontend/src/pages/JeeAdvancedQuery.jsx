@@ -102,7 +102,7 @@ const JeeAdvancedQuery = () => {
 
       // 1. Initial Session Creation (Start Counseling)
       if (!isInitialized) {
-        const response = await apiClient.post("/chat/start", {
+        const response = await apiClient.post("chat/start", {
           rank: rankNum,
           category: selectedCategory,
           year: year,
@@ -147,7 +147,7 @@ const JeeAdvancedQuery = () => {
         // If there was a specific query during start (unlikely in this UI flow but possible)
         if (userQuery) {
           const storedSessionId = sessionStorage.getItem('chat_session_id');
-          const chatResponseRaw = await apiClient.post(`/chat/${storedSessionId}/message`, { message: userQuery });
+          const chatResponseRaw = await apiClient.post(`chat/${storedSessionId}/message`, { message: userQuery });
           const chatResponse = chatResponseRaw.data;
           addMessage(chatResponse.message, 'bot');
         }
@@ -155,7 +155,7 @@ const JeeAdvancedQuery = () => {
         // ... (Existing else block for when session is already initialized)
         // This part handles subsequent messages
         const storedSessionId = sessionStorage.getItem('chat_session_id');
-        const chatResponseRaw = await apiClient.post(`/chat/${storedSessionId}/message`, { message: userQuery });
+        const chatResponseRaw = await apiClient.post(`chat/${storedSessionId}/message`, { message: userQuery });
         const chatResponse = chatResponseRaw.data;
 
         // ... check for full report and display response ...
@@ -439,7 +439,7 @@ const JeeAdvancedQuery = () => {
                     addMessage("Generating your detailed professional report. This may take a moment...", "bot");
 
                     try {
-                      const response = await apiClient.post(`/chat/${sessionId}/full-report`);
+                      const response = await apiClient.post(`chat/${sessionId}/full-report`);
                       const data = response.data;
 
                       if (data.data && data.data.full_report) {

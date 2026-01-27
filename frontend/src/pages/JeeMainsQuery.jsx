@@ -117,7 +117,7 @@ const JeeMainsQuery = () => {
 
             if (!isInitialized) {
                 // Start new session
-                const response = await apiClient.post("/jee-mains-chat/start", {
+                const response = await apiClient.post("jee-mains-chat/start", {
                     rank: rankNum,
                     category: selectedCategory,
                     year: year,
@@ -159,7 +159,7 @@ const JeeMainsQuery = () => {
             } else {
                 // Send message to existing session
                 const storedSessionId = sessionStorage.getItem('jee_mains_chat_session_id');
-                const chatResponseRaw = await apiClient.post(`/jee-mains-chat/${storedSessionId}/message`, { message: userQuery });
+                const chatResponseRaw = await apiClient.post(`jee-mains-chat/${storedSessionId}/message`, { message: userQuery });
                 const chatResponse = chatResponseRaw.data;
 
                 if (chatResponse.data && chatResponse.data.full_report) {
@@ -430,7 +430,7 @@ const JeeMainsQuery = () => {
                                         addMessage("Generating your detailed professional report. This may take a moment...", "bot");
 
                                         try {
-                                            const response = await apiClient.post(`/jee-mains-chat/${sessionId}/full-report`);
+                                            const response = await apiClient.post(`jee-mains-chat/${sessionId}/full-report`);
                                             const data = response.data;
 
                                             if (data.data && data.data.full_report) {
