@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.core.config import settings
 from app.core.database import get_db
-from app.routes import recommend, chat
+from app.routes import recommend, chat, jee_mains_chat
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -30,6 +30,7 @@ app.add_middleware(
 # Register routes
 app.include_router(recommend.router, prefix=settings.API_PREFIX)
 app.include_router(chat.router, prefix=settings.API_PREFIX)
+app.include_router(jee_mains_chat.router, prefix=settings.API_PREFIX)
 
 
 @app.get("/")

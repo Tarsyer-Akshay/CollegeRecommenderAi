@@ -6,6 +6,8 @@ import HomePage from './pages/HomePage';
 import JeeMainQuery from './pages/JeeMainQuery';
 import JeeAdvancedQuery from './pages/JeeAdvancedQuery';
 import JeeAdvancedFullReport from './pages/JeeAdvancedFullReport';
+import JeeMainsQuery from './pages/JeeMainsQuery';
+import JeeMainsFullReport from './pages/JeeMainsFullReport';
 import { AuthProvider } from './context/AuthContext';
 import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -33,6 +35,22 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <JeeAdvancedFullReport />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/jee-mains"
+                                element={
+                                    <ProtectedRoute>
+                                        <JeeMainsQuery />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/jee-mains-full-report"
+                                element={
+                                    <ProtectedRoute>
+                                        <JeeMainsFullReport />
                                     </ProtectedRoute>
                                 }
                             />

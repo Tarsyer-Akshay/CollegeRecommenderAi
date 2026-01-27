@@ -1,0 +1,35 @@
+branch_name,short_name,degree_type,branch_id
+Artificial Intelligence,ART,B.Tech,1
+Artificial Intelligence and Data Engineering,ART,B.Tech,2
+Artificial Intelligence and Data Science,ART,B.Tech,3
+B.Tech in Mathematics and Computing,B.T,B.Tech,4
+B.Tech in Mechanical Engineering and M.Tech in AI and Robotics,B.T,B.Tech,5
+B.Tech. in Electronics and Communication Engineering and M.Tech. in Communication Systems,ECE,B.Tech,6
+B.Tech. in Electronics and Communication Engineering and M.Tech. in Microelectronics and VLSI Systems,ECE,B.Tech,7
+CSE,CSE,B.Tech,8
+Computer Science,CSE,B.Tech,9
+Computer Science Engineering,CSE,B.Tech,10
+Computer Science and Artificial Intelligence,CSE,B.Tech,11
+Computer Science and Business,CSE,B.Tech,12
+Computer Science and Engineering,CSE,B.Tech,13
+Computer Science and Engineering with Major in Artificial Intelligence,CSE,B.Tech,14
+Computer Science and Engineering with specialization in Artificial Intelligence and Data Science,CSE,B.Tech,15
+Computer Science and Engineering with specialization in Cyber Security,CSE,B.Tech,16
+Computer Science and Engineering with specialization in Quantum Technologies,CSE,B.Tech,17
+Data Science and Artificial Intelligence,DAT,B.Tech,18
+Design Engineering,DES,B.Tech,19
+Electrical and Electronics Engineering,ELE,B.Tech,20
+Electronics and Communication Engineering,ECE,B.Tech,21
+Electronics and Communication Engineering with specialization in Design and Manufacturing,ECE,B.Tech,22
+Electronics and Communication Engineering with specialization in VLSI and Embedded Systems,ECE,B.Tech,23
+Engineering Physics,ENG,B.Tech,24
+Information Technology,IT,B.Tech,25
+Information Technology-Business Informatics,IT,B.Tech,26
+Integrated B. Tech.,INT,B.Tech,27
+Mathematics and Computing,MAT,B.Tech,28
+Mathematics and Scientific Computing,MAT,B.Tech,29
+Mechanical Engineering,MEC,B.Tech,30
+Mechanical Engineering with specialization in Design and Manufacturing,MEC,B.Tech,31
+Mechatronics and Automation Engineering,MEC,B.Tech,32
+Physics and Computational Engineering,PHY,B.Tech,33
+Smart Manufacturing,SMA,B.Tech,34

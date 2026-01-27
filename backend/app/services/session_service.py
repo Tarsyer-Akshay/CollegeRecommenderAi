@@ -16,13 +16,14 @@ class SessionService:
     Manages user sessions, chat history, and counseling state using Database.
     """
     
-    def create_session(self, db: Session, initial_data: SessionCreate, user_id: Optional[str] = None) -> ChatSession:
+    def create_session(self, db: Session, initial_data: SessionCreate, user_id: Optional[str] = None, source_type: str = 'jee_advanced') -> ChatSession:
         """Create a new counseling session in the database."""
         # Create DB model
         db_session = SessionModel(
             rank=initial_data.rank,
             category=initial_data.category,
             year=initial_data.year,
+            source_type=source_type,
             state=SessionState.INITIAL.value,
             history=[],
             recommendations=None,

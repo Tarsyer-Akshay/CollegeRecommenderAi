@@ -16,6 +16,7 @@ class Session(Base):
     rank = Column(Integer)
     category = Column(String)
     year = Column(Integer)
+    source_type = Column(String, default='jee_advanced')  # 'jee_advanced' or 'jee_mains'
     state = Column(String)
     
     history = Column(JSONB)

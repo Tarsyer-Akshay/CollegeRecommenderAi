@@ -4,8 +4,9 @@ Loads environment variables from .env file.
 """
 
 import logging
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
-from typing import Optional, List
+from typing import Optional, List, Union
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -29,6 +30,15 @@ class Settings(BaseSettings):
     # CORS Configuration
     BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
     
+    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
+
     # Application Configuration
     PROJECT_NAME: str = "IIT Rank-Based College Recommendation System"
     VERSION: str = "1.0.0"

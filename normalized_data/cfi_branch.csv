@@ -1,0 +1,65 @@
+branch_name,short_name,degree_type,branch_id
+Aeronautical Engineering,AER,B.Tech,1
+Aerospace Engineering,AER,B.Tech,2
+Agricultural Engineering,AGR,B.Tech,3
+Animation and VFX,ANI,B.Tech,4
+Architecture,ARC,B.Tech,5
+Artificial Intelligence and Data Science,ART,B.Tech,6
+Artificial Intelligence and Machine Learning,ART,B.Tech,7
+B. Tech in Electronics and Communication Engineering with minor in Wearable Electronics,B. ,B.Tech,8
+B.Tech in Artificial Intelligenece and Data Science,B.T,B.Tech,9
+B.Tech in Aviation Engineering,B.T,B.Tech,10
+B.Tech in CSE,B.T,B.Tech,11
+B.Tech in Civil Engineering,B.T,B.Tech,12
+B.Tech in Electrical Engineering,B.T,B.Tech,13
+B.Tech in Electronics & Communication Engineering,B.T,B.Tech,14
+B.Tech in Mathematics and Computing,B.T,B.Tech,15
+B.Tech in Mechanical Engineering,B.T,B.Tech,16
+B.Tech.,B.T,B.Tech,17
+Bachelor of Design,BAC,B.Tech,18
+Bio Medical Engineering,BIO,B.Tech,19
+Bio Technology,BIO,B.Tech,20
+Biomedical Engineering,BIO,B.Tech,21
+Carpet and Textile Technology,CAR,B.Tech,22
+Chemical Engineering,CHE,B.Tech,23
+Chemistry,CHE,B.Tech,24
+Civil Engineering,CIV,B.Tech,25
+Civil and Environmental Engineering,CIV,B.Tech,26
+Computer Engineering,COM,B.Tech,27
+Computer Science Engineering,COM,B.Tech,28
+Computer Science and Engineering,COM,B.Tech,29
+Computer Science and Engineering with Major in Artificial Intelligence,COM,B.Tech,30
+Computer Science and Engineering with minor in AI and ML,COM,B.Tech,31
+Computer Science and Engineering with specialization in Cyber Security,COM,B.Tech,32
+Dairy Engineering,DAI,B.Tech,33
+Data Science and Artificial Intelligence,DAT,B.Tech,34
+Electrical Engineering,ELE,B.Tech,35
+Electrical and Electronics Engineering,ELE,B.Tech,36
+Electronic Engineering,ELE,B.Tech,37
+Electronics Engineering,ELE,B.Tech,38
+Electronics and Communication Engineering,ELE,B.Tech,39
+Electronics and Instrumentation Engineering,ELE,B.Tech,40
+Electronics and Telecommunication Engineering,ELE,B.Tech,41
+Energy Engineering,ENE,B.Tech,42
+Fashion and Apparel Engineering,FAS,B.Tech,43
+Food Engineering and Technology,FOO,B.Tech,44
+Food Technology,FOO,B.Tech,45
+Food Technology and Management,FOO,B.Tech,46
+Handloom and Textile Technology,HAN,B.Tech,47
+Industrial and Production Engineering,IND,B.Tech,48
+Information Technology,INF,B.Tech,49
+Instrumentation Engineering,INS,B.Tech,50
+Instrumentation and Control Engineering,INS,B.Tech,51
+Materials Engineering,MAT,B.Tech,52
+Mathematics,MAT,B.Tech,53
+Mathematics and Computing,MAT,B.Tech,54
+Mechanical Engineering,MEC,B.Tech,55
+Mechatronics Engineering,MEC,B.Tech,56
+Metallurgical and Materials Engineering,MET,B.Tech,57
+Metallurgy and Materials Engineering,MET,B.Tech,58
+Physics,PHY,B.Tech,59
+Planning,PLA,B.Tech,60
+Printing and Packaging Technology,PRI,B.Tech,61
+Production and Industrial Engineering,PRO,B.Tech,62
+Quantitative Economics & Data Science,QUA,B.Tech,63
+Robotics and AI,ROB,B.Tech,64

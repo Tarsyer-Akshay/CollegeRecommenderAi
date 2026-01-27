@@ -1,0 +1,73 @@
+branch_name,short_name,degree_type,branch_id
+Aerospace Engineering,AE,B.Tech,1
+Architecture,ARCH,B.Arch,2
+Artificial Intelligence,AI,B.Tech,3
+Artificial Intelligence and Data Engineering,AI,B.Tech,4
+Artificial Intelligence and Data Science,AIDS,B.Tech,5
+Artificial Intelligence and Machine Learning,AI,B.Tech,6
+B. Tech. and M. Tech. in Engineering and Computational Mechanics,BTA,Dual/Integrated,7
+B.Tech in Mathematics and Computing,MNC,B.Tech,8
+Bio Medical Engineering,BME,B.Tech,9
+Bio Technology,BT,B.Tech,10
+Biosciences and Bioengineering,BAB,B.Tech,11
+Biotechnology,BT,Dual/Integrated,12
+Biotechnology and Biochemical Engineering,BT,B.Tech,13
+Ceramic Engineering,CE,B.Tech,14
+Ceramic Engineering and M.Tech Industrial Ceramic,CEA,Dual/Integrated,15
+Chemical Engineering,CHE,B.Tech,16
+Chemical Science and Technology,CSA,B.Tech,17
+Chemical Technology,CT,Dual/Integrated,18
+Chemistry,CHE,BS,19
+Civil Engineering,CE,B.Tech,20
+Civil Engineering with Specialization in Construction Technology and Management,CE,Dual/Integrated,21
+Computational Mathematics,CM,Dual/Integrated,22
+Computational and Data Science,DS,B.Tech,23
+Computer Science and Engineering,CSE,B.Tech,24
+Computer Science and Engineering with Specialization in Cyber Security,CSE,Dual/Integrated,25
+Computer Science and Engineering with Specialization in Data Science,CSE,Dual/Integrated,26
+Data Science and Engineering,DS,B.Tech,27
+Electrical Engineering,EE,B.Tech,28
+Electrical Engineering with Specialization In Power System Engineering,EE,Dual/Integrated,29
+Electrical and Electronics Engineering,EAE,B.Tech,30
+Electronics Engineering,EE,B.Tech,31
+Electronics and Communication Engineering,ECE,B.Tech,32
+Electronics and Communication Engineering with Specialization in Microelectronics and VLSI System Design,ECE,Dual/Integrated,33
+Electronics and Instrumentation Engineering,EAI,B.Tech,34
+Electronics and Telecommunication Engineering,EAT,B.Tech,35
+Electronics and VLSI Engineering,EAV,B.Tech,36
+Energy Engineering,ENE,B.Tech,37
+Energy and Electrical Vehicle Engineering,EAE,B.Tech,38
+Engineering Physics,EP,B.Tech,39
+Engineering and Computational Mechanics,EAC,B.Tech,40
+Food Process Engineering,FPE,B.Tech,41
+Industrial Chemistry,IC,B.Tech,42
+Industrial Design,DES,B.Tech,43
+Industrial Internet of Things,IIO,B.Tech,44
+Industrial and Production Engineering,PE,B.Tech,45
+Information Technology,IT,B.Tech,46
+Instrumentation and Control Engineering,IAC,B.Tech,47
+Life Science,LS,Dual/Integrated,48
+Material Science and Engineering,MSA,Dual/Integrated,49
+Materials Engineering,ME,B.Tech,50
+Materials Science and Engineering,MSE,B.Tech,51
+Materials Science and Metallurgical Engineering,MSA,B.Tech,52
+Mathematics & Computing,M&C,BS,53
+Mathematics,MAT,Dual/Integrated,54
+Mathematics and Computing,MNC,B.Tech,55
+Mathematics and Computing Technology,MNC,Dual/Integrated,56
+Mathematics and Data Science,DS,Dual/Integrated,57
+Mechanical Engineering,ME,B.Tech,58
+Mechanical Engineering with Specialization in Manufacturing and Industrial Engineering,ME,Dual/Integrated,59
+Mechatronics and Automation Engineering,MAA,B.Tech,60
+Metallurgical and Materials Engineering,MME,B.Tech,61
+Metallurgy and Materials Engineering,MAM,B.Tech,62
+Microelectronics & VLSI Engineering,M&V,B.Tech,63
+Mining Engineering,MIN,B.Tech,64
+Physics,PHY,BS,65
+Planning,PLA,B.Tech,66
+Production Engineering,PE,B.Tech,67
+Production and Industrial Engineering,PAI,B.Tech,68
+ROBOTICS & AUTOMATION,R&A,B.Tech,69
+SUSTAINABLE ENERGY TECHNOLOGIES,SET,B.Tech,70
+Textile Technology,TT,B.Tech,71
+VLSI Design and Technology,DES,B.Tech,72

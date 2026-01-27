@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-import { Send, Bot, User, BookOpen, TrendingUp, MessageCircle, Eye, List } from 'lucide-react';
+import { Send, Bot, User, BookOpen, TrendingUp, MessageCircle, Eye, List, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import apiClient from '../api/client';
 
 const JeeAdvancedQuery = () => {
   const navigate = useNavigate();
@@ -100,22 +101,14 @@ const JeeAdvancedQuery = () => {
 
       // 1. Initial Session Creation (Start Counseling)
       if (!isInitialized) {
-        const response = await fetch("http://127.0.0.1:8000/api/chat/start", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            rank: rankNum,
-            category: selectedCategory,
-            year: year,
-            query: userQuery || null
-          })
+        const response = await apiClient.post("/chat/start", {
+          rank: rankNum,
+          category: selectedCategory,
+          year: year,
+          query: userQuery || null
         });
 
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const sessionData = await response.json(); // Rename local var to avoid conflict with Auth session
+        const sessionData = response.data; // Rename local var to avoid conflict with Auth session
 
         // Store session ID logic
         const newSessionId = sessionData.session_id;
@@ -153,34 +146,16 @@ const JeeAdvancedQuery = () => {
         // If there was a specific query during start (unlikely in this UI flow but possible)
         if (userQuery) {
           const storedSessionId = sessionStorage.getItem('chat_session_id');
-          const chatResponseRaw = await fetch(`http://127.0.0.1:8000/api/chat/${storedSessionId}/message`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ message: userQuery })
-          });
-
-          if (!chatResponseRaw.ok) throw new Error(`API error: ${chatResponseRaw.status}`);
-          const chatResponse = await chatResponseRaw.json();
+          const chatResponseRaw = await apiClient.post(`/chat/${storedSessionId}/message`, { message: userQuery });
+          const chatResponse = chatResponseRaw.data;
           addMessage(chatResponse.message, 'bot');
         }
       } else {
         // ... (Existing else block for when session is already initialized)
         // This part handles subsequent messages
         const storedSessionId = sessionStorage.getItem('chat_session_id');
-        const chatResponseRaw = await fetch(`http://127.0.0.1:8000/api/chat/${storedSessionId}/message`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({ message: userQuery })
-        });
-
-        if (!chatResponseRaw.ok) throw new Error(`API error: ${chatResponseRaw.status}`);
-        const chatResponse = await chatResponseRaw.json();
+        const chatResponseRaw = await apiClient.post(`/chat/${storedSessionId}/message`, { message: userQuery });
+        const chatResponse = chatResponseRaw.data;
 
         // ... check for full report and display response ...
         if (chatResponse.data && chatResponse.data.full_report) {
@@ -267,6 +242,27 @@ const JeeAdvancedQuery = () => {
     setTimeout(() => {
       fetchRecommendations(userMessage);
     }, 100);
+  };
+
+  const handleClearChat = () => {
+    if (window.confirm('Are you sure you want to clear the chat and start over?')) {
+      setMessages([]);
+      setIsInitialized(false);
+      setCurrentRecommendationData(null);
+      setChatInput('');
+
+      // Clear session storage
+      sessionStorage.removeItem('chat_messages');
+      sessionStorage.removeItem('chat_rank');
+      sessionStorage.removeItem('chat_year');
+      sessionStorage.removeItem('chat_category');
+      sessionStorage.removeItem('chat_initialized');
+      sessionStorage.removeItem('chat_session_id');
+      sessionStorage.removeItem('chat_recommendation_data');
+
+      // Reset form defaults if needed, though keeping them might be user friendly
+      // setRank(''); // Optional
+    }
   };
 
   const RecommendationCard = ({ college, category }) => {
@@ -442,15 +438,8 @@ const JeeAdvancedQuery = () => {
                     addMessage("Generating your detailed professional report. This may take a moment...", "bot");
 
                     try {
-                      const response = await fetch(`http://127.0.0.1:8000/api/chat/${sessionId}/full-report`, {
-                        method: "POST",
-                        headers: {
-                          "Authorization": `Bearer ${session?.access_token}`
-                        }
-                      });
-
-                      if (!response.ok) throw new Error("Failed to generate report");
-                      const data = await response.json();
+                      const response = await apiClient.post(`/chat/${sessionId}/full-report`);
+                      const data = response.data;
 
                       if (data.data && data.data.full_report) {
                         // Update state
@@ -848,6 +837,18 @@ const JeeAdvancedQuery = () => {
                 <p className="text-sm text-gray-600">AI-powered counseling based on cutoff data</p>
               </div>
             </div>
+            {/* Clear Chat Button */}
+            {(isInitialized || messages.length > 0) && (
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={handleClearChat}
+                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                title="Clear Chat & Start Over"
+              >
+                <Trash2 className="w-5 h-5" />
+              </motion.button>
+            )}
           </div>
         </div>
       </div>
@@ -961,6 +962,16 @@ const JeeAdvancedQuery = () => {
                 disabled={loading}
                 className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
               />
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleClearChat}
+                className="bg-red-50 text-red-500 px-4 py-3 rounded-lg font-medium hover:bg-red-100 transition-all duration-200 flex items-center justify-center border border-red-200"
+                title="Clear Chat"
+              >
+                <Trash2 className="w-5 h-5" />
+              </motion.button>
               <motion.button
                 type="submit"
                 whileHover={{ scale: 1.05 }}
