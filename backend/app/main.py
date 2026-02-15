@@ -19,9 +19,20 @@ app = FastAPI(
 )
 
 # Configure CORS (allow frontend to access backend)
+# Configure CORS (allow frontend to access backend)
+origins = [
+    "http://localhost",
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://rankkmate.in",
+    "https://www.rankkmate.in",
+    "http://rankkmate.in",
+    "http://www.rankkmate.in",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.BACKEND_CORS_ORIGINS, 
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
