@@ -28,7 +28,12 @@ class Settings(BaseSettings):
     SUPABASE_KEY: Optional[str] = None
     
     # CORS Configuration
-    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
+    BACKEND_CORS_ORIGINS: List[str] = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://rankkmate.in",
+        "https://www.rankkmate.in"
+    ]
     
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
@@ -40,7 +45,7 @@ class Settings(BaseSettings):
         raise ValueError(v)
 
     # Application Configuration
-    PROJECT_NAME: str = "IIT Rank-Based College Recommendation System"
+    PROJECT_NAME: str = "RankkMate"
     VERSION: str = "1.0.0"
     API_PREFIX: str = "/api"
     

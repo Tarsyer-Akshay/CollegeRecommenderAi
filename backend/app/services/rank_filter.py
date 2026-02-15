@@ -47,7 +47,11 @@ class RankFilterService:
         # Calculate thresholds
         min_eligible_rank = rank * MIN_ELIGIBLE_THRESHOLD
         safe_threshold_rank = rank * SAFE_THRESHOLD
+        safe_threshold_rank = rank * SAFE_THRESHOLD
         moderate_threshold_rank = rank * MODERATE_THRESHOLD
+        # User requested filtering: Closing Rank <= User Rank + 800
+        # This removes "too safe" options that might be irrelevant
+        max_eligible_rank = rank + 800
         
         # Query eligible cutoffs
         # Using round_number for filtering (prefer latest round if available)
@@ -60,7 +64,10 @@ class RankFilterService:
                 and_(
                     Cutoff.year == year,
                     Cutoff.category == category,
-                    Cutoff.closing_rank >= min_eligible_rank
+                    Cutoff.year == year,
+                    Cutoff.category == category,
+                    Cutoff.closing_rank >= min_eligible_rank,
+                    Cutoff.closing_rank <= max_eligible_rank
                 )
             )
             .order_by(Cutoff.round.desc(), Cutoff.closing_rank.asc())

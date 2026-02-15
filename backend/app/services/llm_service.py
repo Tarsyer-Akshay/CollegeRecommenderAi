@@ -21,7 +21,8 @@ class LLMService:
             try:
                 genai.configure(api_key=self.api_key)
                 # 'gemini-pro' was not found, using 'gemini-flash-latest' which is verified to work
-                self.model = genai.GenerativeModel('gemini-flash-latest')
+                # User requested 'Gemini 2.5 Flash-Lite'
+                self.model = genai.GenerativeModel('gemini-2.5-flash-lite')
             except Exception as e:
                 print(f"Warning: Failed to initialize Gemini API: {e}")
                 self.enabled = False
@@ -280,16 +281,24 @@ Respond as an experienced counselor would speak:"""
         """Build prompt for Layer 3: Full Counseling Report (detailed)."""
 
         # Format recommendations into readable text
-        def format_list(items: List[RecommendationItem], label: str) -> str:
+        def format_list(items: List[RecommendationItem], label: str, limit: int = 15) -> str:
             if not items:
                 return f"{label}: None available\n"
 
-            lines = [f"{label} ({len(items)} options):"]
-            for item in items:
+            # Limit the number of items to reduce token usage
+            display_items = items[:limit]
+            remaining_count = len(items) - len(display_items)
+            
+            lines = [f"{label} (Top {len(display_items)} of {len(items)} options):"]
+            for item in display_items:
                 lines.append(
                     f"  - {item.iit} ({item.branch}): "
                     f"Closing Rank {item.closing_rank}"
                 )
+            
+            if remaining_count > 0:
+                lines.append(f"  ...and {remaining_count} more options (omitted for brevity)")
+                
             return "\n".join(lines) + "\n"
 
         safe_text = format_list(safe, "SAFE")
@@ -300,151 +309,34 @@ Respond as an experienced counselor would speak:"""
         if query:
             user_query_context = f"- Student Query (if any): {query}\n"
 
-        prompt = f"""You are an experienced IIT JEE Advanced admission counselor with many years of counseling experience.
-Your task is to generate a professional, detailed, and trustworthy IIT counseling report using ONLY the provided cutoff-based recommendations.
+        prompt = f"""Act as an expert IIT admission counselor. Generate a professional, realistic counseling report based ONLY on the provided data.
 
-This report will be read by both students and parents, so it must be clear, calm, realistic, and authoritative.
-
----
-
-### INPUT CONTEXT (Provided to You)
-- Student Rank: {rank}
-- Category: {category}
-- Counseling Year: 2024
+INPUT DATA:
+- Rank: {rank}, Category: {category}, Year: 2024
 {user_query_context}
-- SAFE Recommendations: {safe_text}
-- MODERATE Recommendations: {moderate_text}
-- AMBITIOUS Recommendations: {ambitious_text}
+- SAFE OPTIONS:
+{safe_text}
+- MODERATE OPTIONS:
+{moderate_text}
+- AMBITIOUS OPTIONS:
+{ambitious_text}
 
-All college and branch options come from historical cutoff data.
-DO NOT invent, assume, or suggest colleges or branches outside this data.
+REPORT STRUCTURE (Formatted in Markdown):
+1. **Title**: Personalized IIT JEE Report
+2. **Profile Summary**: Rank, Category, Goal.
+3. **Admission Outlook**: Realistic assessment of chances.
+4. **Recommendation Summary**: Brief overview of Safe/Moderate/Ambitious buckets.
+5. **Detailed Recommendations**: Group by category. List top options with Closing Ranks. Explain reasoning for each category.
+6. **Trade-off Analysis**: Guidance on Branch vs IIT reputation based on this rank.
+7. **Strategy**: Preference ordering and risk management advice.
+8. **Common Mistakes**: 3-5 pitfalls to avoid.
+9. **Next Steps**: Actionable advice.
+10. **Disclaimer**: Historical data usage note.
 
----
-
-## REPORT REQUIREMENTS
-
-Generate a **Full Counseling Report** with the following structure and headings.
-
----
-
-### 1. Report Title
-- Clear, professional title
-Example:
-"Personalized IIT JEE Advanced Counseling Report"
-
----
-
-### 2. Student Profile Summary
-Include:
-- JEE Advanced Rank
-- Category
-- Counseling Year
-- Student's stated preference (if query provided)
-
-Keep it concise and factual.
-
----
-
-### 3. Overall Admission Outlook
-Explain:
-- The student's overall admission standing
-- Strength of SAFE, MODERATE, and AMBITIOUS opportunities
-- Honest, realistic evaluation (no false hope)
-
-Tone:
-- Reassuring but practical
-
----
-
-### 4. Recommendation Summary
-Provide a quick snapshot:
-- SAFE options: High probability
-- MODERATE options: Medium probability
-- AMBITIOUS options: Low probability but possible
-
-Do not list colleges here — only summarize.
-
----
-
-### 5. Detailed College & Branch Recommendations
-
-Organize into three sections:
-
-#### SAFE OPTIONS
-For each recommendation:
-- IIT Name
-- Branch Name
-- Closing Rank
-- Brief reason why it is considered safe
-
-#### MODERATE OPTIONS
-For each recommendation:
-- IIT Name
-- Branch Name
-- Closing Rank
-- Explanation of risk vs reward
-
-#### AMBITIOUS OPTIONS
-For each recommendation:
-- IIT Name
-- Branch Name
-- Closing Rank
-- Clear explanation of why chances are lower and why it may still be considered
-
-Limit verbosity but ensure clarity.
-
----
-
-### 6. Branch vs IIT Trade-off Analysis
-Explain:
-- When branch preference should dominate
-- When IIT reputation may matter more
-- How this applies specifically to this student's rank and category
-
----
-
-### 7. Counseling Strategy & Preference Filling Guidance
-Provide actionable advice:
-- How to order preferences
-- How many SAFE / MODERATE / AMBITIOUS options to include
-- Risk management approach during counseling rounds
-
----
-
-### 8. Common Mistakes to Avoid
-List 3–5 common mistakes students make at similar ranks and categories.
-
-This section must be practical and cautionary.
-
----
-
-### 9. Next Steps for the Student
-Explain:
-- How to use this report during counseling
-- What to review before each counseling round
-- Encourage informed and calm decision-making
-
----
-
-### 10. Disclaimer
-Include a short disclaimer:
-- Recommendations are based on historical cutoff data
-- Final outcomes depend on counseling dynamics and seat availability
-
----
-
-## STYLE & RULES
-
-- Write like a senior human counselor, not an AI
-- Avoid over-motivation or pessimism
-- Be professional, structured, and readable
-- Do NOT reference data sources or internal logic
-- Do NOT hallucinate colleges or branches
-- Do NOT exceed necessary detail — value over length
-
----
-
-Deliver the report as a clean, well-formatted document using clear headings and short paragraphs."""
+RULES:
+- Tone: Professional, reassuring, realistic.
+- STRICTLY use provided data. NO hallucinations.
+- Be concise but helpful."""
 
         return prompt
     

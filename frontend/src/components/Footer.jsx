@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { BookOpen, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 
@@ -8,10 +9,10 @@ const Footer = () => {
   const footerLinks = {
     quickLinks: [
       { name: 'Home', href: '/' },
-      { name: 'JEE Main Query', href: '/jee-main' },
+      { name: 'JEE Mains Query', href: '/jee-mains' },
       { name: 'JEE Advanced Query', href: '/jee-advanced' },
-      { name: 'About Us', href: '#' },
-      { name: 'Contact', href: '#' }
+      { name: 'About Us', href: '/about' },
+      { name: 'Contact', href: '/contact' }
     ],
     resources: [
       { name: 'College Rankings', href: '#' },
@@ -23,9 +24,9 @@ const Footer = () => {
     support: [
       { name: 'Help Center', href: '#' },
       { name: 'FAQ', href: '#' },
-      { name: 'Privacy Policy', href: '#' },
-      { name: 'Terms of Service', href: '#' },
-      { name: 'Feedback', href: '#' }
+      { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Terms of Service', href: '/terms' },
+      { name: 'Feedback', href: '/contact' }
     ]
   };
 
@@ -52,8 +53,8 @@ const Footer = () => {
               <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                JEE Admission AI
+              <h3 className="font-heading text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                RankkMate
               </h3>
             </div>
             <p className="text-gray-300 mb-4 text-sm leading-relaxed">
@@ -87,12 +88,12 @@ const Footer = () => {
             <ul className="space-y-2">
               {footerLinks.quickLinks.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-gray-300 hover:text-purple-400 transition-colors duration-200 text-sm"
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -108,12 +109,12 @@ const Footer = () => {
             <ul className="space-y-2">
               {footerLinks.resources.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-gray-300 hover:text-purple-400 transition-colors duration-200 text-sm"
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -129,20 +130,20 @@ const Footer = () => {
             <ul className="space-y-2 mb-6">
               {footerLinks.support.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="text-gray-300 hover:text-purple-400 transition-colors duration-200 text-sm"
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
-            
+
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-gray-300 text-sm">
                 <Mail className="w-4 h-4 text-purple-400" />
-                <span>support@jeeadmissionai.com</span>
+                <span>support@rankkmate.in</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-300 text-sm">
                 <Phone className="w-4 h-4 text-purple-400" />
@@ -160,7 +161,7 @@ const Footer = () => {
           className="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
         >
           <div className="text-gray-400 text-sm text-center md:text-left">
-            © {currentYear} JEE Admission AI. All rights reserved. Made with ❤️ for JEE aspirants.
+            © {currentYear} RankkMate. All rights reserved. Made with ❤️ for JEE aspirants.
           </div>
           <div className="flex items-center space-x-6 text-sm text-gray-400">
             <span>🚀 Powered by AI Technology</span>

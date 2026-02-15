@@ -37,7 +37,7 @@ app.include_router(jee_mains_chat.router, prefix=settings.API_PREFIX)
 async def root():
     """Root endpoint for health check."""
     return {
-        "message": "IIT Rank-Based College Recommendation System API",
+        "message": "RankkMate API",
         "version": settings.VERSION,
         "status": "operational"
     }

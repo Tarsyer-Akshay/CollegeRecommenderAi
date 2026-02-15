@@ -32,13 +32,13 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2 mr-8">
-              <motion.div
+              <motion.img
                 whileHover={{ scale: 1.05 }}
-                className="w-8 h-8 bg-gradient-to-r from-purple-600 to-purple-400 rounded-lg flex items-center justify-center"
-              >
-                <BookOpen className="w-5 h-5 text-white" />
-              </motion.div>
-              <span className="font-heading font-bold text-xl text-purple-800">JEE Predictor</span>
+                src="/logo.png"
+                alt="RankkMate Logo"
+                className="w-10 h-10 rounded-lg object-contain"
+              />
+              <span className="font-heading font-bold text-xl text-purple-800">RankkMate</span>
             </Link>
 
             <div className="hidden md:flex items-center space-x-4">

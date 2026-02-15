@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, Users, TrendingUp, Award, BookOpen } from 'lucide-react';
+import { ArrowRight, Zap, Users, TrendingUp, Award, BookOpen, Target } from 'lucide-react';
 
 const HomePage = () => {
     const features = [
@@ -11,6 +11,13 @@ const HomePage = () => {
             description: 'Discover IIT admission possibilities with your JEE Advanced rank',
             link: '/jee-advanced',
             color: 'from-purple-500 to-purple-600'
+        },
+        {
+            icon: Target,
+            title: 'JEE Mains Predictor',
+            description: 'Find NIT, IIIT, and GFTI options based on your JEE Mains rank',
+            link: '/jee-mains',
+            color: 'from-blue-500 to-blue-600'
         }
     ];
 
@@ -55,6 +62,17 @@ const HomePage = () => {
                                 >
                                     <span>JEE Advanced Query</span>
                                     <ArrowRight className="w-5 h-5" />
+                                </motion.button>
+                            </Link>
+
+                            <Link to="/jee-mains">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="bg-white text-purple-600 border border-purple-200 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2"
+                                >
+                                    <span>JEE Mains Query</span>
+                                    <Target className="w-5 h-5" />
                                 </motion.button>
                             </Link>
                         </motion.div>

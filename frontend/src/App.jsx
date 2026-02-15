@@ -11,6 +11,11 @@ import JeeMainsFullReport from './pages/JeeMainsFullReport';
 import { AuthProvider } from './context/AuthContext';
 import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute';
+import AboutUs from './pages/AboutUs';
+import Contact from './pages/Contact';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
+import NotFound from './pages/NotFound';
 
 function App() {
     return (
@@ -22,6 +27,10 @@ function App() {
                         <Routes>
                             <Route path="/" element={<HomePage />} />
                             <Route path="/auth" element={<Auth />} />
+                            <Route path="/about" element={<AboutUs />} />
+                            <Route path="/contact" element={<Contact />} />
+                            <Route path="/privacy" element={<PrivacyPolicy />} />
+                            <Route path="/terms" element={<Terms />} />
                             <Route
                                 path="/jee-advanced"
                                 element={
@@ -54,6 +63,7 @@ function App() {
                                     </ProtectedRoute>
                                 }
                             />
+                            <Route path="*" element={<NotFound />} />
                         </Routes>
                     </main>
                     <Footer />
