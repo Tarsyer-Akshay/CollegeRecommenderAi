@@ -32,7 +32,9 @@ class Settings(BaseSettings):
         "http://localhost:5173",
         "http://localhost:3000",
         "https://rankkmate.in",
-        "https://www.rankkmate.in"
+        "https://www.rankkmate.in",
+        "http://rankkmate.in",
+        "http://www.rankkmate.in"
     ]
     
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
