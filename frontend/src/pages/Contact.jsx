@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
+import SEOHead from '../components/SEOHead';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -9,6 +10,14 @@ const Contact = () => {
         subject: '',
         message: ''
     });
+
+    const contactSchema = {
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        "name": "Contact RankkMate",
+        "url": "https://rankkmate.in/contact",
+        "description": "Contact the RankkMate team for JEE college prediction queries."
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -26,6 +35,12 @@ const Contact = () => {
 
     return (
         <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+            <SEOHead
+                title="Contact Us"
+                description="Have questions about JEE college predictions? Reach out to the RankkMate team. We're here to help with your admission queries."
+                canonicalPath="/contact"
+                schemaMarkup={contactSchema}
+            />
             <div className="max-w-7xl mx-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

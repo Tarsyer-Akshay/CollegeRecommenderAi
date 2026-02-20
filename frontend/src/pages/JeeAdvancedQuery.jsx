@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Send, Bot, User, BookOpen, TrendingUp, MessageCircle, Eye, List, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/client';
+import SEOHead from '../components/SEOHead';
 
 const JeeAdvancedQuery = () => {
   const navigate = useNavigate();
@@ -71,7 +72,9 @@ const JeeAdvancedQuery = () => {
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (isInitialized && messages.length > 0) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -821,9 +824,25 @@ const JeeAdvancedQuery = () => {
     );
   };
 
+  const jeeAdvancedSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "RankkMate JEE Advanced College Predictor",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web",
+    "url": "https://rankkmate.in/jee-advanced",
+    "description": "AI-powered IIT admission predictor based on JEE Advanced rank.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex flex-col">
-      {/* Header */}
+      <SEOHead
+        title="JEE Advanced College Predictor 2026"
+        description="Predict your IIT admission chances with AI. Enter your JEE Advanced rank to get personalized IIT branch recommendations for 2026."
+        canonicalPath="/jee-advanced"
+        schemaMarkup={jeeAdvancedSchema}
+      />
       <div className="bg-white shadow-sm border-b border-purple-100">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">

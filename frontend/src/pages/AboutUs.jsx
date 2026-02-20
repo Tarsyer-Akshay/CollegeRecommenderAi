@@ -1,10 +1,32 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Award, BookOpen, Users, Target, Heart, Zap } from 'lucide-react';
+import SEOHead from '../components/SEOHead';
 
 const AboutUs = () => {
+    const orgSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "RankkMate",
+        "url": "https://rankkmate.in",
+        "logo": "https://rankkmate.in/logo.png",
+        "description": "AI-powered JEE college predictor helping students find their dream engineering college.",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "support@rankkmate.in",
+            "contactType": "customer service"
+        },
+        "sameAs": []
+    };
+
     return (
         <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+            <SEOHead
+                title="About RankkMate - AI College Predictor"
+                description="RankkMate helps JEE aspirants find their dream college with AI-powered predictions based on historical cutoff data for IITs, NITs & IIITs."
+                canonicalPath="/about"
+                schemaMarkup={orgSchema}
+            />
             <div className="max-w-7xl mx-auto">
                 {/* Hero Section */}
                 <motion.div

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Send, Bot, User, BookOpen, TrendingUp, MessageCircle, Eye, List, Trash2, Filter } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/client';
+import SEOHead from '../components/SEOHead';
 
 const JeeMainsQuery = () => {
     const navigate = useNavigate();
@@ -73,7 +74,9 @@ const JeeMainsQuery = () => {
     };
 
     useEffect(() => {
-        scrollToBottom();
+        if (isInitialized && messages.length > 0) {
+            scrollToBottom();
+        }
     }, [messages]);
 
     useEffect(() => {
@@ -592,6 +595,21 @@ const JeeMainsQuery = () => {
     if (!isInitialized) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50 pt-20 pb-10">
+                <SEOHead
+                    title="JEE Mains College Predictor 2026"
+                    description="Find your best NIT, IIIT & GFTI options using AI. Enter your JEE Mains rank for personalized college predictions for 2026."
+                    canonicalPath="/jee-mains"
+                    schemaMarkup={{
+                        "@context": "https://schema.org",
+                        "@type": "SoftwareApplication",
+                        "name": "RankkMate JEE Mains College Predictor",
+                        "applicationCategory": "EducationalApplication",
+                        "operatingSystem": "Web",
+                        "url": "https://rankkmate.in/jee-mains",
+                        "description": "AI-powered NIT, IIIT & GFTI admission predictor based on JEE Mains rank.",
+                        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+                    }}
+                />
                 <div className="max-w-2xl mx-auto px-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -687,6 +705,11 @@ const JeeMainsQuery = () => {
     // Chat Interface
     return (
         <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50 pt-20 pb-4">
+            <SEOHead
+                title="JEE Mains College Predictor 2026"
+                description="Find your best NIT, IIIT & GFTI options using AI. Enter your JEE Mains rank for personalized college predictions for 2026."
+                canonicalPath="/jee-mains"
+            />
             <div className="max-w-4xl mx-auto px-4 h-[calc(100vh-6rem)] flex flex-col">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">

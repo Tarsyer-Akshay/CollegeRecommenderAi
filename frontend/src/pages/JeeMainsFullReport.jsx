@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bot, TrendingUp, BookOpen } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import SEOHead from '../components/SEOHead';
 
 const JeeMainsFullReport = () => {
     const [reportData, setReportData] = useState(null);
@@ -92,7 +93,10 @@ const JeeMainsFullReport = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50">
-            {/* Header */}
+            <SEOHead
+                title="JEE Mains Full Report"
+                noIndex={true}
+            />
             <div className="bg-white shadow-sm border-b border-teal-100">
                 <div className="max-w-4xl mx-auto px-4 py-6">
                     <motion.div

@@ -1,5 +1,14 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+
+// Scrolls to top on every route change
+function ScrollToTop() {
+    const { pathname } = useLocation();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+    return null;
+}
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -21,6 +30,7 @@ function App() {
     return (
         <AuthProvider>
             <Router>
+                <ScrollToTop />
                 <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100">
                     <Navbar />
                     <main className="pt-16">

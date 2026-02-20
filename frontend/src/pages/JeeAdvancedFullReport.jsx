@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bot, TrendingUp, BookOpen } from 'lucide-react';
+import SEOHead from '../components/SEOHead';
 
 const JeeAdvancedFullReport = () => {
   const [reportData, setReportData] = useState(null);
@@ -94,7 +95,10 @@ const JeeAdvancedFullReport = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      {/* Header */}
+      <SEOHead
+        title="JEE Advanced Full Report"
+        noIndex={true}
+      />
       <div className="bg-white shadow-sm border-b border-purple-100">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <motion.div

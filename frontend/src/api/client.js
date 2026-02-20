@@ -11,11 +11,15 @@ const apiClient = axios.create({
 // Interceptor to add Auth Token to every request
 apiClient.interceptors.request.use(async (config) => {
     try {
+        console.log("Checking session for request to:", config.url);
         const { data } = await supabase.auth.getSession();
         const session = data?.session;
 
         if (session?.access_token) {
+            console.log("Attaching Authorization header");
             config.headers.Authorization = `Bearer ${session.access_token}`;
+        } else {
+            console.warn("No active session found for API request");
         }
     } catch (error) {
         console.error("Error attaching auth token:", error);

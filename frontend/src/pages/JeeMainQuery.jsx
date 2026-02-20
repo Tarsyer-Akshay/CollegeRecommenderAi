@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, BookOpen, MapPin, Users, TrendingUp, Search, Filter } from 'lucide-react';
+import SEOHead from '../components/SEOHead';
 
 const JeeMainQuery = () => {
   const [query, setQuery] = useState('');
@@ -55,6 +56,11 @@ const JeeMainQuery = () => {
 
   return (
     <div className="min-h-screen py-8 px-4">
+      <SEOHead
+        title="JEE Main College Predictor"
+        description="Get AI-powered college recommendations based on your JEE Main rank and preferences."
+        canonicalPath="/jee-main"
+      />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div

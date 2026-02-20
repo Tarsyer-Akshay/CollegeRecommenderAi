@@ -2,10 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Ghost, Home, ArrowRight } from 'lucide-react';
+import SEOHead from '../components/SEOHead';
 
 const NotFound = () => {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
+            <SEOHead
+                title="Page Not Found"
+                description="The page you're looking for doesn't exist. Go back to RankkMate homepage."
+                noIndex={true}
+            />
             <div className="max-w-md w-full text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

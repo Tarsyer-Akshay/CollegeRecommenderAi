@@ -1,9 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import SEOHead from '../components/SEOHead';
 
 const Terms = () => {
     return (
         <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+            <SEOHead
+                title="Terms of Service"
+                description="Review RankkMate's terms of service, disclaimer, and usage policies for our JEE college prediction tool."
+                canonicalPath="/terms"
+            />
             <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

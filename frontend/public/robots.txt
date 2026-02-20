@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /auth
+Disallow: /jee-advanced-full-report
+Disallow: /jee-mains-full-report
+
+Sitemap: https://rankkmate.in/sitemap.xml

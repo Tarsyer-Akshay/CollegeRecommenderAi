@@ -1,9 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import SEOHead from '../components/SEOHead';
 
 const PrivacyPolicy = () => {
     return (
         <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+            <SEOHead
+                title="Privacy Policy"
+                description="Read how RankkMate collects, uses, and protects your personal data. Your privacy matters to us."
+                canonicalPath="/privacy"
+            />
             <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
