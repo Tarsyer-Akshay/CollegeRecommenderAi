@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import { Menu, X, BookOpen, Target, Zap, LogOut, LogIn, User } from 'lucide-react';
+import { Menu, X, BookOpen, Target, Zap, LogOut, LogIn, User, GraduationCap } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,6 +22,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Home', path: '/', icon: BookOpen },
+    { name: 'Colleges', path: '/colleges', icon: GraduationCap },
     { name: 'JEE Advanced', path: '/jee-advanced', icon: Zap },
     { name: 'JEE Mains', path: '/jee-mains', icon: Target }
   ];
